@@ -211,10 +211,12 @@ function setStatus(c, msg) {
 
 function parseCSV(text) {
   var lines = text.replace(/\r/g,'').split('\n').filter(function(l){ return l.trim(); });
+  // Buscar la fila de headers real: la primera celda está vacía y la segunda es NOMBRE_TIENDA
   var hIdx = 0;
-  for (var i = 0; i < Math.min(lines.length, 20); i++) {
-    var u = lines[i].toUpperCase();
-    if (u.indexOf('NOMBRE_TIENDA') > -1 || u.indexOf('STATUS_PO') > -1 || u.indexOf('NRO_OC') > -1) { hIdx = i; break; }
+  for (var i = 0; i < Math.min(lines.length, 25); i++) {
+    var cells = splitLine(lines[i]).map(function(h){ return h.replace(/^"|"$/g,'').trim(); });
+    // La fila de headers real tiene celda[0]='' y celda[1]='NOMBRE_TIENDA'
+    if (cells.length > 2 && cells[0] === '' && cells[1].toUpperCase() === 'NOMBRE_TIENDA') { hIdx = i; break; }
   }
   var rawHeaders = splitLine(lines[hIdx]).map(function(h){ return h.replace(/^"|"$/g,'').trim(); });
   // Saltar columna vacía inicial que Aleph agrega a la izquierda
