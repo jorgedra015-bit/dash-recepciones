@@ -9,7 +9,7 @@
     --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3350;
     --accent:#ff6b35;--accent2:#4fc3f7;--green:#26c281;--yellow:#f5a623;
     --red:#e74c3c;--text:#e8eaf0;--muted:#7b82a0;--font:'Inter',-apple-system,sans-serif;
-  }h
+  }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;}
   header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
@@ -163,8 +163,7 @@
 
 <script>
 // ── CONFIG ──────────────────────────────────────────────
-const SHEET_ID = '1V6r85mshEbggxNRth5C7NEDR-Kv5ENar3H4QCl7BeSg';
-const GID      = '540661722';
+const CSV_PUB_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=0&single=true&output=csv';
 // ────────────────────────────────────────────────────────
 
 const PAGE = 100;
@@ -180,7 +179,7 @@ async function loadData() {
     `<tr><td colspan="16"><div class="state"><div class="spin"></div><p>Leyendo datos del Sheet…</p></div></td></tr>`;
 
   // Endpoint que usa la sesión de Google ya activa en el browser
-  const url = `https://corsproxy.io/?url=${encodeURIComponent(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`)}`;
+  const url = `https://corsproxy.io/?url=${encodeURIComponent(CSV_PUB_URL)}&t=${Date.now()}`;
 
   try {
     const res = await fetch(url, { cache: 'no-store' });
