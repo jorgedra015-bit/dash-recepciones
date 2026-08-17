@@ -170,7 +170,7 @@ document.querySelectorAll('th[data-col]').forEach(function(th) {
 function loadData() {
   setStatus('y', 'Cargando…');
   document.getElementById('tbody').innerHTML = '<tr><td colspan="16"><div class="state"><div class="spin"></div><p>Leyendo datos…</p></div></td></tr>';
-  var url = 'https://corsproxy.io/?url=' + encodeURIComponent(CSV_URL) + '&t=' + Date.now();
+  var url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(CSV_URL);
   fetch(url, { cache: 'no-store' })
     .then(function(res) {
       if (!res.ok) throw new Error('HTTP ' + res.status);
