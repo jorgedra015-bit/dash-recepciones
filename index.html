@@ -96,7 +96,7 @@
 </header>
 <div style="background:#1a1d27;border-bottom:1px solid #2e3350;padding:8px 24px;display:flex;align-items:center;gap:10px;">
   <span style="font-size:11px;color:#7b82a0;white-space:nowrap;">📄 Link CSV:</span>
-  <input id="csv-input" type="text" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=0&single=true&output=csv"
+  <input id="csv-input" type="text" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=540661722&single=true&output=csv"
     style="flex:1;background:#0f1117;border:1px solid #2e3350;color:#e8eaf0;padding:5px 10px;border-radius:5px;font-size:12px;font-family:monospace;">
   <button class="btn" onclick="CSV_URL=document.getElementById('csv-input').value;loadData();" style="white-space:nowrap;">Conectar</button>
 </div>
@@ -164,7 +164,7 @@
 
 <script>
 // URL PUBLICA del Sheet de Aleph (Hoja 1 publicada como CSV)
-var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=0&single=true&output=csv';
+var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=540661722&single=true&output=csv';
 
 var PAGE = 100;
 var all = [], fil = [], pg = 1, sCol = 'INICIO_RECEPCION', sDir = -1;
@@ -173,28 +173,36 @@ document.querySelectorAll('th[data-col]').forEach(function(th) {
   th.addEventListener('click', function() { sortBy(th.dataset.col); });
 });
 
-function loadData() {
+async function loadData() {
+  var inputEl = document.getElementById('csv-input');
+  if (inputEl && inputEl.value.trim()) CSV_URL = inputEl.value.trim();
   setStatus('y', 'Cargando…');
   document.getElementById('tbody').innerHTML = '<tr><td colspan="16"><div class="state"><div class="spin"></div><p>Leyendo datos…</p></div></td></tr>';
-  var url = CSV_URL + '&t=' + Date.now();
-  fetch(url, { cache: 'no-store' })
-    .then(function(res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.text();
-    })
-    .then(function(text) {
-      if (!text || text.trim().startsWith('<')) throw new Error('No se recibió CSV válido');
-      all = parseCSV(text);
-      if (!all.length) throw new Error('Sin datos');
-      buildFilters();
-      applyFilters();
-      var t = new Date().toLocaleString('es-CL', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
-      setStatus('g', 'Actualizado ' + t + ' · ' + all.length.toLocaleString('es-CL') + ' filas');
-    })
-    .catch(function(e) {
-      setStatus('r', 'Error: ' + e.message);
-      document.getElementById('tbody').innerHTML = '<tr><td colspan="16"><div class="state"><div class="ico">⚠️</div><p>' + e.message + '</p></div></td></tr>';
-    });
+
+  var text = null;
+  try {
+    var r = await fetch(CSV_URL, { cache: 'no-store', mode: 'cors' });
+    if (r.ok) text = await r.text();
+    if (!text || text.trim().startsWith('<') || text.length < 100) text = null;
+  } catch(e) {}
+
+  if (!text) {
+    setStatus('r', 'Error: no se pudo cargar el CSV');
+    document.getElementById('tbody').innerHTML = '<tr><td colspan="16"><div class="state"><div class="ico">⚠️</div><p>No se pudo cargar el CSV.<br>Verifica que el link sea correcto y el Sheet esté publicado.</p></div></td></tr>';
+    return;
+  }
+
+  try {
+    all = parseCSV(text);
+    if (!all.length) throw new Error('Sin datos válidos');
+    buildFilters();
+    applyFilters();
+    var ts = new Date().toLocaleString('es-CL', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+    setStatus('g', 'Actualizado ' + ts + ' · ' + all.length.toLocaleString('es-CL') + ' filas');
+  } catch(e) {
+    setStatus('r', 'Error: ' + e.message);
+    document.getElementById('tbody').innerHTML = '<tr><td colspan="16"><div class="state"><div class="ico">⚠️</div><p>' + e.message + '</p></div></td></tr>';
+  }
 }
 
 function setStatus(c, msg) {
@@ -204,7 +212,7 @@ function setStatus(c, msg) {
 function parseCSV(text) {
   var lines = text.replace(/\r/g,'').split('\n').filter(function(l){ return l.trim(); });
   var hIdx = 0;
-  for (var i = 0; i < Math.min(lines.length, 15); i++) {
+  for (var i = 0; i < Math.min(lines.length, 20); i++) {
     var u = lines[i].toUpperCase();
     if (u.indexOf('NOMBRE_TIENDA') > -1 || u.indexOf('STATUS_PO') > -1 || u.indexOf('NRO_OC') > -1) { hIdx = i; break; }
   }
