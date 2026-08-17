@@ -41,7 +41,7 @@
   .fcount{font-size:11px;color:var(--muted);margin-left:auto;}
   .table-wrap{padding:0 24px;overflow-x:auto;}
   table{width:100%;border-collapse:collapse;white-space:nowrap;}
-  thead tr{background:var(--surface2);position:sticky;top:57px;z-index:10;}
+  thead tr{background:var(--surface2);}
   th{padding:9px 11px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;}
   th:hover{color:var(--text);}
   th.asc::after{content:' ↑';color:var(--accent2);}
@@ -211,26 +211,32 @@ function setStatus(c, msg) {
 
 function parseCSV(text) {
   var lines = text.replace(/\r/g,'').split('\n').filter(function(l){ return l.trim(); });
-  // Buscar la fila de headers real: la primera celda está vacía y la segunda es NOMBRE_TIENDA
+  function splitLine(line) {
+    var r=[], c='', inQ=false;
+    for (var i=0; i<line.length; i++) {
+      var ch=line[i];
+      if(ch==='"'){inQ=!inQ;}
+      else if(ch===','&&!inQ){r.push(c);c='';}
+      else c+=ch;
+    }
+    r.push(c); return r;
+  }
+  // Buscar fila real de headers: cells[0]='' y cells[1]='NOMBRE_TIENDA'
   var hIdx = 0;
   for (var i = 0; i < Math.min(lines.length, 25); i++) {
     var cells = splitLine(lines[i]).map(function(h){ return h.replace(/^"|"$/g,'').trim(); });
-    // La fila de headers real tiene celda[0]='' y celda[1]='NOMBRE_TIENDA'
     if (cells.length > 2 && cells[0] === '' && cells[1].toUpperCase() === 'NOMBRE_TIENDA') { hIdx = i; break; }
   }
-  var rawHeaders = splitLine(lines[hIdx]).map(function(h){ return h.replace(/^"|"$/g,'').trim(); });
-  // Saltar columna vacía inicial que Aleph agrega a la izquierda
-  var colOffset = 0;
-  while (colOffset < rawHeaders.length && rawHeaders[colOffset] === '') colOffset++;
-  var headers = rawHeaders.slice(colOffset);
+  var rawH = splitLine(lines[hIdx]).map(function(h){ return h.replace(/^"|"$/g,'').trim(); });
+  var offset = 0;
+  while (offset < rawH.length && rawH[offset] === '') offset++;
+  var headers = rawH.slice(offset);
   var rows = [];
   for (var j = hIdx + 1; j < lines.length; j++) {
-    var allVals = splitLine(lines[j]).map(function(v){ return v.replace(/^"|"$/g,'').trim(); });
-    var vals = allVals.slice(colOffset);
+    var vals = splitLine(lines[j]).map(function(v){ return v.replace(/^"|"$/g,'').trim(); }).slice(offset);
     if (vals.every(function(v){ return !v; })) continue;
     var obj = {};
     headers.forEach(function(h, k){ obj[h] = vals[k] || ''; });
-    // Solo incluir filas con datos reales (NOMBRE_TIENDA o NRO_OC llenos)
     if (obj['NOMBRE_TIENDA'] || obj['NRO_OC']) rows.push(obj);
   }
   return rows;
