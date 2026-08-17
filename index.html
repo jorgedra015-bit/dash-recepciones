@@ -94,6 +94,12 @@
     <button class="btn" onclick="loadData()">↻ Actualizar</button>
   </div>
 </header>
+<div style="background:#1a1d27;border-bottom:1px solid #2e3350;padding:8px 24px;display:flex;align-items:center;gap:10px;">
+  <span style="font-size:11px;color:#7b82a0;white-space:nowrap;">📄 Link CSV:</span>
+  <input id="csv-input" type="text" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=0&single=true&output=csv"
+    style="flex:1;background:#0f1117;border:1px solid #2e3350;color:#e8eaf0;padding:5px 10px;border-radius:5px;font-size:12px;font-family:monospace;">
+  <button class="btn" onclick="CSV_URL=document.getElementById('csv-input').value;loadData();" style="white-space:nowrap;">Conectar</button>
+</div>
 
 <div class="kpi-row">
   <div class="kpi"><div class="kpi-label">Total OC</div><div class="kpi-value ca" id="k-total">—</div><div class="kpi-sub">recepciones</div></div>
@@ -170,7 +176,7 @@ document.querySelectorAll('th[data-col]').forEach(function(th) {
 function loadData() {
   setStatus('y', 'Cargando…');
   document.getElementById('tbody').innerHTML = '<tr><td colspan="16"><div class="state"><div class="spin"></div><p>Leyendo datos…</p></div></td></tr>';
-  var url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(CSV_URL);
+  var url = CSV_URL + '&t=' + Date.now();
   fetch(url, { cache: 'no-store' })
     .then(function(res) {
       if (!res.ok) throw new Error('HTTP ' + res.status);
