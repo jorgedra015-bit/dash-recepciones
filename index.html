@@ -230,7 +230,8 @@ function parseCSV(text) {
     if (vals.every(function(v){ return !v; })) continue;
     var obj = {};
     headers.forEach(function(h, k){ obj[h] = vals[k] || ''; });
-    rows.push(obj);
+    // Solo incluir filas con datos reales (NOMBRE_TIENDA o NRO_OC llenos)
+    if (obj['NOMBRE_TIENDA'] || obj['NRO_OC']) rows.push(obj);
   }
   return rows;
 }
