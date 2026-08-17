@@ -216,10 +216,15 @@ function parseCSV(text) {
     var u = lines[i].toUpperCase();
     if (u.indexOf('NOMBRE_TIENDA') > -1 || u.indexOf('STATUS_PO') > -1 || u.indexOf('NRO_OC') > -1) { hIdx = i; break; }
   }
-  var headers = splitLine(lines[hIdx]).map(function(h){ return h.replace(/^"|"$/g,'').trim(); });
+  var rawHeaders = splitLine(lines[hIdx]).map(function(h){ return h.replace(/^"|"$/g,'').trim(); });
+  // Saltar columna vacía inicial que Aleph agrega a la izquierda
+  var colOffset = 0;
+  while (colOffset < rawHeaders.length && rawHeaders[colOffset] === '') colOffset++;
+  var headers = rawHeaders.slice(colOffset);
   var rows = [];
   for (var j = hIdx + 1; j < lines.length; j++) {
-    var vals = splitLine(lines[j]).map(function(v){ return v.replace(/^"|"$/g,'').trim(); });
+    var allVals = splitLine(lines[j]).map(function(v){ return v.replace(/^"|"$/g,'').trim(); });
+    var vals = allVals.slice(colOffset);
     if (vals.every(function(v){ return !v; })) continue;
     var obj = {};
     headers.forEach(function(h, k){ obj[h] = vals[k] || ''; });
