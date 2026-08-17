@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recepciones · Turbo CL</title>
+<style>
+  :root {
+    --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3350;
+    --accent:#ff6b35;--accent2:#4fc3f7;--green:#26c281;--yellow:#f5a623;
+    --red:#e74c3c;--text:#e8eaf0;--muted:#7b82a0;--font:'Inter',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;}
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .logo-text{font-size:15px;font-weight:700;letter-spacing:-0.3px;}
+  .logo-sub{font-size:11px;color:var(--muted);}
+  .hright{display:flex;align-items:center;gap:10px;}
+  #status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;}
+  .dot{width:7px;height:7px;border-radius:50%;display:inline-block;}
+  .dot.g{background:var(--green);animation:pulse 2s infinite;}
+  .dot.y{background:var(--yellow);}
+  .dot.r{background:var(--red);}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-family:var(--font);transition:background .15s;}
+  .btn:hover{background:var(--border);}
+  .kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:16px 24px;}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;}
+  .kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;}
+  .kpi-value{font-size:24px;font-weight:700;letter-spacing:-0.5px;}
+  .kpi-sub{font-size:10px;color:var(--muted);margin-top:3px;}
+  .ca{color:var(--accent)}.cg{color:var(--green)}.cy{color:var(--yellow)}.cr{color:var(--red)}.cb{color:var(--accent2)}
+  .filters{padding:0 24px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .fg{display:flex;align-items:center;gap:5px;}
+  .fg label{font-size:11px;color:var(--muted);}
+  select,.fi{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:5px 9px;border-radius:5px;font-size:12px;font-family:var(--font);}
+  select:focus,.fi:focus{outline:none;border-color:var(--accent2);}
+  .fi{width:180px;}
+  .fcount{font-size:11px;color:var(--muted);margin-left:auto;}
+  .table-wrap{padding:0 24px;overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;white-space:nowrap;}
+  thead tr{background:var(--surface2);position:sticky;top:57px;z-index:10;}
+  th{padding:9px 11px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;}
+  th:hover{color:var(--text);}
+  th.asc::after{content:' ↑';color:var(--accent2);}
+  th.desc::after{content:' ↓';color:var(--accent2);}
+  td{padding:7px 11px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  tr:hover td{background:rgba(255,255,255,.02);}
+  .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.3px;}
+  .b-full{background:#0d3320;color:var(--green);}
+  .b-partial{background:#3a2a00;color:var(--yellow);}
+  .b-atstore{background:#3a0d0d;color:var(--red);}
+  .b-other{background:var(--surface2);color:var(--muted);}
+  .b-ok{background:#0d3320;color:var(--green);}
+  .b-falt{background:#3a2a00;color:var(--yellow);}
+  .b-sobr{background:#1a1a3a;color:var(--accent2);}
+  .b-60{background:#3a0d0d;color:var(--red);}
+  .b-fuera{background:#3a2a00;color:var(--yellow);}
+  .b-enhorario{background:#0d3320;color:var(--green);}
+  .fr{display:flex;align-items:center;gap:7px;min-width:110px;}
+  .fr-bg{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+  .fr-bar{height:100%;border-radius:3px;}
+  .fr-num{font-size:11px;font-weight:600;min-width:38px;text-align:right;}
+  a.flink{color:var(--accent2);text-decoration:none;font-size:11px;}
+  a.flink:hover{text-decoration:underline;}
+  .state{text-align:center;padding:60px 24px;color:var(--muted);}
+  .state .ico{font-size:36px;margin-bottom:12px;}
+  .state p{font-size:13px;line-height:1.8;}
+  .spin{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .pager{padding:12px 24px 24px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);}
+  .pinfo{font-size:11px;color:var(--muted);}
+  .pbtns{display:flex;gap:4px;}
+  .pbtn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;font-family:var(--font);}
+  .pbtn:hover:not(:disabled){background:var(--border);}
+  .pbtn:disabled{opacity:.35;cursor:default;}
+  .pbtn.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .notice{background:#1a2535;border:1px solid var(--accent2);border-radius:6px;padding:10px 16px;margin:0 24px 12px;font-size:12px;color:var(--accent2);display:flex;align-items:center;gap:8px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">📦</div>
+    <div>
+      <div class="logo-text">Recepciones · Turbo CL</div>
+      <div class="logo-sub">Panel de seguimiento por proveedor</div>
+    </div>
+  </div>
+  <div class="hright">
+    <div id="status"><span class="dot y"></span>Cargando…</div>
+    <button class="btn" onclick="loadData()">↻ Actualizar</button>
+  </div>
+</header>
+
+<div class="notice">
+  ℹ️ Este dashboard lee directamente tu Google Sheet usando tu sesión de Google. Debe abrirse en un browser donde estés logueado en Google.
+</div>
+
+<div class="kpi-row">
+  <div class="kpi"><div class="kpi-label">Total OC</div><div class="kpi-value ca" id="k-total">—</div><div class="kpi-sub">recepciones</div></div>
+  <div class="kpi"><div class="kpi-label">Fillrate Promedio</div><div class="kpi-value cg" id="k-fill">—</div><div class="kpi-sub">% recibido / solicitado</div></div>
+  <div class="kpi"><div class="kpi-label">Con Faltante</div><div class="kpi-value cy" id="k-falt">—</div><div class="kpi-sub">qty recibida &lt; pedida</div></div>
+  <div class="kpi"><div class="kpi-label">Fuera de Horario</div><div class="kpi-value cr" id="k-fuera">—</div><div class="kpi-sub">antes 7h o después 18h</div></div>
+  <div class="kpi"><div class="kpi-label">> 60 Min</div><div class="kpi-value cr" id="k-lento">—</div><div class="kpi-sub">recepciones lentas</div></div>
+  <div class="kpi"><div class="kpi-label">Tiempo Promedio</div><div class="kpi-value cb" id="k-avgmin">—</div><div class="kpi-sub">minutos por recepción</div></div>
+</div>
+
+<div class="filters">
+  <div class="fg"><label>Tienda</label><select id="f-t" onchange="applyFilters()"><option value="">Todas</option></select></div>
+  <div class="fg"><label>Proveedor</label><select id="f-p" onchange="applyFilters()"><option value="">Todos</option></select></div>
+  <div class="fg"><label>Estado OC</label>
+    <select id="f-s" onchange="applyFilters()">
+      <option value="">Todos</option>
+      <option>DELIVERED</option><option>PARTIAL_DELIVERY</option><option>AT_STORE</option>
+      <option>CLOSED_FULL_DELIVERY</option><option>CLOSED_PARTIAL_DELIVERY</option>
+    </select>
+  </div>
+  <div class="fg"><label>Cantidad</label>
+    <select id="f-fc" onchange="applyFilters()"><option value="">Todos</option><option>FALTANTE</option><option>SOBRANTE</option><option>OK</option></select>
+  </div>
+  <div class="fg"><label>Tiempo</label>
+    <select id="f-ft" onchange="applyFilters()"><option value="">Todos</option><option value="> 60 MIN">> 60 MIN</option><option>OK</option></select>
+  </div>
+  <div class="fg"><label>Horario</label>
+    <select id="f-h" onchange="applyFilters()"><option value="">Todos</option><option value="FUERA">Fuera de horario</option><option value="EN">En horario</option></select>
+  </div>
+  <div class="fg"><label>Buscar</label><input class="fi" type="text" id="f-q" placeholder="OC / Responsable / Proveedor…" oninput="applyFilters()"></div>
+  <button class="btn" onclick="clearF()">✕ Limpiar</button>
+  <button class="btn" onclick="exportCSV()">↓ CSV</button>
+  <span class="fcount" id="fcount"></span>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr>
+      <th data-col="STATUS_PO">Estado OC</th>
+      <th data-col="FILLRATE_PCT">Fillrate</th>
+      <th data-col="NOMBRE_TIENDA">Tienda</th>
+      <th data-col="PROVEEDOR">Proveedor</th>
+      <th data-col="RESPONSABLE_RECEPCION">Responsable</th>
+      <th data-col="NRO_OC">Nro OC</th>
+      <th data-col="INICIO_RECEPCION">Inicio Recepción</th>
+      <th data-col="CIERRE_RECEPCION">Cierre Recepción</th>
+      <th data-col="TOTAL_MIN_RECEPCION">Min Total</th>
+      <th data-col="QTY_SOLICITADA">Qty Sol.</th>
+      <th data-col="QTY_RECIBIDA">Qty Rec.</th>
+      <th data-col="FUERA_DE_HORARIO">Horario</th>
+      <th data-col="FLAG_CANTIDAD">Flag Cant.</th>
+      <th data-col="FLAG_TIEMPO">Flag Tiempo</th>
+      <th data-col="NUMERO_FACTURA">Nro Factura</th>
+      <th>Factura</th>
+    </tr></thead>
+    <tbody id="tbody">
+      <tr><td colspan="16"><div class="state"><div class="spin"></div><p>Conectando con Google Sheets…</p></div></td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="pager"><span class="pinfo" id="pinfo"></span><div class="pbtns" id="pbtns"></div></div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────
+const SHEET_ID = '1V6r85mshEbggxNRth5C7NEDR-Kv5ENar3H4QCl7BeSg';
+const GID      = '540661722';
+// ────────────────────────────────────────────────────────
+
+const PAGE = 100;
+let all = [], fil = [], pg = 1, sCol = 'INICIO_RECEPCION', sDir = -1;
+
+document.querySelectorAll('th[data-col]').forEach(th =>
+  th.addEventListener('click', () => sortBy(th.dataset.col))
+);
+
+async function loadData() {
+  setStatus('y', 'Cargando…');
+  document.getElementById('tbody').innerHTML =
+    `<tr><td colspan="16"><div class="state"><div class="spin"></div><p>Leyendo datos del Sheet…</p></div></td></tr>`;
+
+  // Endpoint que usa la sesión de Google ya activa en el browser
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}&t=${Date.now()}`;
+
+  try {
+    const res = await fetch(url, { credentials: 'include', cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const text = await res.text();
+    if (!text || text.includes('<!DOCTYPE')) throw new Error('Sesión no válida — asegúrate de estar logueado en Google en este browser');
+
+    all = parseCSV(text);
+    if (all.length === 0) throw new Error('El Sheet no devolvió datos');
+
+    buildFilters();
+    applyFilters();
+    const t = new Date().toLocaleString('es-CL', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+    setStatus('g', `Actualizado ${t} · ${all.length.toLocaleString('es-CL')} filas`);
+  } catch(e) {
+    setStatus('r', 'Error de conexión');
+    document.getElementById('tbody').innerHTML =
+      `<tr><td colspan="16"><div class="state">
+        <div class="ico">⚠️</div>
+        <p><strong>${e.message}</strong><br><br>
+        Abre este archivo en Chrome donde tengas sesión iniciada en Google<br>
+        con acceso al Sheet de Aleph.</p>
+      </div></td></tr>`;
+  }
+}
+
+function setStatus(c, msg) {
+  document.getElementById('status').innerHTML = `<span class="dot ${c}"></span>${msg}`;
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n').filter(l => l.trim());
+  // Buscar fila real de headers (que tenga NOMBRE_TIENDA o PROVEEDOR)
+  let hIdx = 0;
+  for (let i = 0; i < Math.min(lines.length, 15); i++) {
+    const u = lines[i].toUpperCase();
+    if (u.includes('NOMBRE_TIENDA') || u.includes('STATUS_PO') || u.includes('NRO_OC')) { hIdx = i; break; }
+  }
+  const headers = splitLine(lines[hIdx]).map(h => h.replace(/^"|"$/g,'').trim());
+  const rows = [];
+  for (let i = hIdx + 1; i < lines.length; i++) {
+    const vals = splitLine(lines[i]).map(v => v.replace(/^"|"$/g,'').trim());
+    if (vals.every(v => !v)) continue;
+    const obj = {};
+    headers.forEach((h, j) => obj[h] = vals[j] || '');
+    rows.push(obj);
+  }
+  return rows;
+}
+
+function splitLine(line) {
+  const r=[]; let c='', inQ=false;
+  for (const ch of line) {
+    if (ch==='"') { inQ=!inQ; }
+    else if (ch===',' && !inQ) { r.push(c); c=''; }
+    else c+=ch;
+  }
+  r.push(c); return r;
+}
+
+function buildFilters() {
+  const uniq = k => [...new Set(all.map(r=>r[k]).filter(Boolean))].sort();
+  const opt  = arr => arr.map(v=>`<option value="${v}">${v}</option>`).join('');
+  document.getElementById('f-t').innerHTML = '<option value="">Todas</option>' + opt(uniq('NOMBRE_TIENDA'));
+  document.getElementById('f-p').innerHTML = '<option value="">Todos</option>' + opt(uniq('PROVEEDOR'));
+}
+
+function applyFilters() {
+  const t=document.getElementById('f-t').value, p=document.getElementById('f-p').value,
+    s=document.getElementById('f-s').value, fc=document.getElementById('f-fc').value,
+    ft=document.getElementById('f-ft').value, h=document.getElementById('f-h').value,
+    q=document.getElementById('f-q').value.toLowerCase();
+
+  fil = all.filter(r => {
+    if (t && r.NOMBRE_TIENDA!==t) return false;
+    if (p && r.PROVEEDOR!==p) return false;
+    if (s && r.STATUS_PO!==s) return false;
+    if (fc && r.FLAG_CANTIDAD!==fc) return false;
+    if (ft && r.FLAG_TIEMPO!==ft) return false;
+    if (h==='FUERA' && !String(r.FUERA_DE_HORARIO).includes('FUERA')) return false;
+    if (h==='EN'    && !String(r.FUERA_DE_HORARIO).includes('EN HORARIO')) return false;
+    if (q && ![r.NRO_OC,r.RESPONSABLE_RECEPCION,r.PROVEEDOR,r.NOMBRE_TIENDA]
+               .some(v=>String(v).toLowerCase().includes(q))) return false;
+    return true;
+  });
+
+  fil.sort((a,b) => {
+    const va=a[sCol]||'', vb=b[sCol]||'';
+    const na=parseFloat(va), nb=parseFloat(vb);
+    if (!isNaN(na)&&!isNaN(nb)) return sDir*(na-nb);
+    return sDir*String(va).localeCompare(String(vb));
+  });
+
+  updateKPIs(); pg=1; render();
+  document.getElementById('fcount').textContent =
+    `${fil.length.toLocaleString('es-CL')} de ${all.length.toLocaleString('es-CL')} registros`;
+}
+
+function updateKPIs() {
+  const fills = fil.map(r=>parseFloat(r.FILLRATE_PCT)).filter(n=>!isNaN(n));
+  const mins  = fil.map(r=>parseInt(r.TOTAL_MIN_RECEPCION)).filter(n=>!isNaN(n)&&n>0);
+  document.getElementById('k-total').textContent  = fil.length.toLocaleString('es-CL');
+  document.getElementById('k-fill').textContent   = fills.length ? (fills.reduce((a,b)=>a+b,0)/fills.length).toFixed(1)+'%' : '—';
+  document.getElementById('k-falt').textContent   = fil.filter(r=>r.FLAG_CANTIDAD==='FALTANTE').length;
+  document.getElementById('k-fuera').textContent  = fil.filter(r=>String(r.FUERA_DE_HORARIO).includes('FUERA')).length;
+  document.getElementById('k-lento').textContent  = fil.filter(r=>r.FLAG_TIEMPO==='> 60 MIN').length;
+  document.getElementById('k-avgmin').textContent = mins.length ? Math.round(mins.reduce((a,b)=>a+b,0)/mins.length)+' min' : '—';
+}
+
+function render() {
+  const start=(pg-1)*PAGE, slice=fil.slice(start, start+PAGE);
+  const tbody=document.getElementById('tbody');
+  if (!slice.length) {
+    tbody.innerHTML=`<tr><td colspan="16"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>`;
+    renderPager(); return;
+  }
+  tbody.innerHTML = slice.map(r => {
+    const fill=parseFloat(r.FILLRATE_PCT);
+    const fc=fill>=100?'var(--green)':fill>=85?'var(--yellow)':'var(--red)';
+    const frHtml=!isNaN(fill)
+      ?`<div class="fr"><div class="fr-bg"><div class="fr-bar" style="width:${Math.min(fill,100)}%;background:${fc}"></div></div><span class="fr-num" style="color:${fc}">${fill}%</span></div>`
+      :'—';
+
+    const s=(r.STATUS_PO||'').toUpperCase();
+    const sBadge=
+      s.includes('CLOSED_FULL')||s==='DELIVERED'    ? `<span class="badge b-full">${r.STATUS_PO}</span>`
+      : s.includes('PARTIAL')                        ? `<span class="badge b-partial">${r.STATUS_PO}</span>`
+      : s==='AT_STORE'                               ? `<span class="badge b-atstore">${r.STATUS_PO}</span>`
+      : `<span class="badge b-other">${r.STATUS_PO||'—'}</span>`;
+
+    const cBadge=
+      r.FLAG_CANTIDAD==='FALTANTE' ? `<span class="badge b-falt">FALTANTE</span>`
+      : r.FLAG_CANTIDAD==='SOBRANTE' ? `<span class="badge b-sobr">SOBRANTE</span>`
+      : r.FLAG_CANTIDAD==='OK'       ? `<span class="badge b-ok">OK</span>` : '—';
+
+    const tBadge=
+      r.FLAG_TIEMPO==='> 60 MIN' ? `<span class="badge b-60">> 60 MIN</span>`
+      : r.FLAG_TIEMPO==='OK'     ? `<span class="badge b-ok">OK</span>` : '—';
+
+    const hBadge=String(r.FUERA_DE_HORARIO).includes('FUERA')
+      ?`<span class="badge b-fuera">${r.FUERA_DE_HORARIO}</span>`
+      :`<span class="badge b-enhorario">✔ EN HORARIO</span>`;
+
+    const fLink=r.FACTURA_URL
+      ?`<a class="flink" href="${r.FACTURA_URL}" target="_blank">📄 Ver</a>`:'—';
+
+    return `<tr>
+      <td>${sBadge}</td><td>${frHtml}</td>
+      <td title="${r.NOMBRE_TIENDA}" style="max-width:160px;overflow:hidden;text-overflow:ellipsis">${r.NOMBRE_TIENDA||'—'}</td>
+      <td title="${r.PROVEEDOR}">${r.PROVEEDOR||'—'}</td>
+      <td>${r.RESPONSABLE_RECEPCION||'—'}</td>
+      <td style="font-family:monospace;font-size:12px">${r.NRO_OC||'—'}</td>
+      <td style="color:var(--muted);font-size:12px">${r.INICIO_RECEPCION||'—'}</td>
+      <td style="color:var(--muted);font-size:12px">${r.CIERRE_RECEPCION||'—'}</td>
+      <td style="text-align:right">${r.TOTAL_MIN_RECEPCION||'—'}</td>
+      <td style="text-align:right">${r.QTY_SOLICITADA||'—'}</td>
+      <td style="text-align:right">${r.QTY_RECIBIDA||'—'}</td>
+      <td>${hBadge}</td><td>${cBadge}</td><td>${tBadge}</td>
+      <td style="font-family:monospace;font-size:11px">${r.NUMERO_FACTURA||'—'}</td>
+      <td>${fLink}</td>
+    </tr>`;
+  }).join('');
+  renderPager();
+}
+
+function renderPager() {
+  const pages=Math.ceil(fil.length/PAGE);
+  const s=(pg-1)*PAGE+1, e=Math.min(pg*PAGE,fil.length);
+  document.getElementById('pinfo').textContent = fil.length?`Mostrando ${s}–${e} de ${fil.length.toLocaleString('es-CL')}`:'';
+  const c=document.getElementById('pbtns');
+  if (pages<=1){c.innerHTML='';return;}
+  let h=`<button class="pbtn" onclick="goP(${pg-1})" ${pg===1?'disabled':''}>‹</button>`;
+  for(let i=1;i<=pages;i++){
+    if(i===1||i===pages||Math.abs(i-pg)<=2) h+=`<button class="pbtn ${i===pg?'on':''}" onclick="goP(${i})">${i}</button>`;
+    else if(Math.abs(i-pg)===3) h+=`<span style="color:var(--muted);padding:4px 5px">…</span>`;
+  }
+  h+=`<button class="pbtn" onclick="goP(${pg+1})" ${pg===pages?'disabled':''}>›</button>`;
+  c.innerHTML=h;
+}
+
+function goP(p){const pages=Math.ceil(fil.length/PAGE);if(p<1||p>pages)return;pg=p;render();window.scrollTo({top:0,behavior:'smooth'});}
+
+function sortBy(col){
+  if(sCol===col)sDir*=-1;else{sCol=col;sDir=-1;}
+  document.querySelectorAll('th').forEach(th=>{
+    th.classList.remove('asc','desc');
+    if(th.dataset.col===col)th.classList.add(sDir===1?'asc':'desc');
+  });
+  applyFilters();
+}
+
+function clearF(){
+  ['f-t','f-p','f-s','f-fc','f-ft','f-h'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-q').value=''; applyFilters();
+}
+
+function exportCSV(){
+  if(!fil.length)return;
+  const keys=Object.keys(fil[0]);
+  const rows=[keys.join(','),...fil.map(r=>keys.map(k=>`"${(r[k]||'').replace(/"/g,'""')}"`).join(','))];
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'}));
+  a.download=`recepciones_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+}
+
+// Auto-cargar al abrir
+loadData();
+</script>
+</body>
+</html>
