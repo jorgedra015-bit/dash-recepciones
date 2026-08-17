@@ -77,7 +77,6 @@
   .pbtn:hover:not(:disabled){background:var(--border);}
   .pbtn:disabled{opacity:.35;cursor:default;}
   .pbtn.on{background:var(--accent);border-color:var(--accent);color:#fff;}
-  .notice{background:#1a2535;border:1px solid var(--accent2);border-radius:6px;padding:10px 16px;margin:0 24px 12px;font-size:12px;color:var(--accent2);display:flex;align-items:center;gap:8px;}
 </style>
 </head>
 <body>
@@ -95,10 +94,6 @@
     <button class="btn" onclick="loadData()">↻ Actualizar</button>
   </div>
 </header>
-
-<div class="notice">
-  ℹ️ Este dashboard lee directamente tu Google Sheet usando tu sesión de Google. Debe abrirse en un browser donde estés logueado en Google.
-</div>
 
 <div class="kpi-row">
   <div class="kpi"><div class="kpi-label">Total OC</div><div class="kpi-value ca" id="k-total">—</div><div class="kpi-sub">recepciones</div></div>
@@ -155,237 +150,192 @@
       <th>Factura</th>
     </tr></thead>
     <tbody id="tbody">
-      <tr><td colspan="16"><div class="state"><div class="spin"></div><p>Conectando con Google Sheets…</p></div></td></tr>
+      <tr><td colspan="16"><div class="state"><div class="spin"></div><p>Cargando datos…</p></div></td></tr>
     </tbody>
   </table>
 </div>
 <div class="pager"><span class="pinfo" id="pinfo"></span><div class="pbtns" id="pbtns"></div></div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────
-const CSV_PUB_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=0&single=true&output=csv';
-// ────────────────────────────────────────────────────────
+// URL PUBLICA del Sheet de Aleph (Hoja 1 publicada como CSV)
+var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=0&single=true&output=csv';
 
-const PAGE = 100;
-let all = [], fil = [], pg = 1, sCol = 'INICIO_RECEPCION', sDir = -1;
+var PAGE = 100;
+var all = [], fil = [], pg = 1, sCol = 'INICIO_RECEPCION', sDir = -1;
 
-document.querySelectorAll('th[data-col]').forEach(th =>
-  th.addEventListener('click', () => sortBy(th.dataset.col))
-);
+document.querySelectorAll('th[data-col]').forEach(function(th) {
+  th.addEventListener('click', function() { sortBy(th.dataset.col); });
+});
 
-async function loadData() {
+function loadData() {
   setStatus('y', 'Cargando…');
-  document.getElementById('tbody').innerHTML =
-    `<tr><td colspan="16"><div class="state"><div class="spin"></div><p>Leyendo datos del Sheet…</p></div></td></tr>`;
-
-  // Endpoint que usa la sesión de Google ya activa en el browser
-  const url = `https://corsproxy.io/?url=${encodeURIComponent(CSV_PUB_URL)}&t=${Date.now()}`;
-
-  try {
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const text = await res.text();
-    if (!text || text.includes('<!DOCTYPE')) throw new Error('Sesión no válida — asegúrate de estar logueado en Google en este browser');
-
-    all = parseCSV(text);
-    if (all.length === 0) throw new Error('El Sheet no devolvió datos');
-
-    buildFilters();
-    applyFilters();
-    const t = new Date().toLocaleString('es-CL', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
-    setStatus('g', `Actualizado ${t} · ${all.length.toLocaleString('es-CL')} filas`);
-  } catch(e) {
-    setStatus('r', 'Error de conexión');
-    document.getElementById('tbody').innerHTML =
-      `<tr><td colspan="16"><div class="state">
-        <div class="ico">⚠️</div>
-        <p><strong>${e.message}</strong><br><br>
-        Abre este archivo en Chrome donde tengas sesión iniciada en Google<br>
-        con acceso al Sheet de Aleph.</p>
-      </div></td></tr>`;
-  }
+  document.getElementById('tbody').innerHTML = '<tr><td colspan="16"><div class="state"><div class="spin"></div><p>Leyendo datos…</p></div></td></tr>';
+  var url = 'https://corsproxy.io/?url=' + encodeURIComponent(CSV_URL) + '&t=' + Date.now();
+  fetch(url, { cache: 'no-store' })
+    .then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.text();
+    })
+    .then(function(text) {
+      if (!text || text.trim().startsWith('<')) throw new Error('No se recibió CSV válido');
+      all = parseCSV(text);
+      if (!all.length) throw new Error('Sin datos');
+      buildFilters();
+      applyFilters();
+      var t = new Date().toLocaleString('es-CL', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+      setStatus('g', 'Actualizado ' + t + ' · ' + all.length.toLocaleString('es-CL') + ' filas');
+    })
+    .catch(function(e) {
+      setStatus('r', 'Error: ' + e.message);
+      document.getElementById('tbody').innerHTML = '<tr><td colspan="16"><div class="state"><div class="ico">⚠️</div><p>' + e.message + '</p></div></td></tr>';
+    });
 }
 
 function setStatus(c, msg) {
-  document.getElementById('status').innerHTML = `<span class="dot ${c}"></span>${msg}`;
+  document.getElementById('status').innerHTML = '<span class="dot ' + c + '"></span>' + msg;
 }
 
 function parseCSV(text) {
-  const lines = text.trim().split('\n').filter(l => l.trim());
-  // Buscar fila real de headers (que tenga NOMBRE_TIENDA o PROVEEDOR)
-  let hIdx = 0;
-  for (let i = 0; i < Math.min(lines.length, 15); i++) {
-    const u = lines[i].toUpperCase();
-    if (u.includes('NOMBRE_TIENDA') || u.includes('STATUS_PO') || u.includes('NRO_OC')) { hIdx = i; break; }
+  var lines = text.replace(/\r/g,'').split('\n').filter(function(l){ return l.trim(); });
+  var hIdx = 0;
+  for (var i = 0; i < Math.min(lines.length, 15); i++) {
+    var u = lines[i].toUpperCase();
+    if (u.indexOf('NOMBRE_TIENDA') > -1 || u.indexOf('STATUS_PO') > -1 || u.indexOf('NRO_OC') > -1) { hIdx = i; break; }
   }
-  const headers = splitLine(lines[hIdx]).map(h => h.replace(/^"|"$/g,'').trim());
-  const rows = [];
-  for (let i = hIdx + 1; i < lines.length; i++) {
-    const vals = splitLine(lines[i]).map(v => v.replace(/^"|"$/g,'').trim());
-    if (vals.every(v => !v)) continue;
-    const obj = {};
-    headers.forEach((h, j) => obj[h] = vals[j] || '');
+  var headers = splitLine(lines[hIdx]).map(function(h){ return h.replace(/^"|"$/g,'').trim(); });
+  var rows = [];
+  for (var j = hIdx + 1; j < lines.length; j++) {
+    var vals = splitLine(lines[j]).map(function(v){ return v.replace(/^"|"$/g,'').trim(); });
+    if (vals.every(function(v){ return !v; })) continue;
+    var obj = {};
+    headers.forEach(function(h, k){ obj[h] = vals[k] || ''; });
     rows.push(obj);
   }
   return rows;
 }
 
 function splitLine(line) {
-  const r=[]; let c='', inQ=false;
-  for (const ch of line) {
-    if (ch==='"') { inQ=!inQ; }
-    else if (ch===',' && !inQ) { r.push(c); c=''; }
-    else c+=ch;
+  var r = [], c = '', inQ = false;
+  for (var i = 0; i < line.length; i++) {
+    var ch = line[i];
+    if (ch === '"') { inQ = !inQ; }
+    else if (ch === ',' && !inQ) { r.push(c); c = ''; }
+    else { c += ch; }
   }
-  r.push(c); return r;
+  r.push(c);
+  return r;
 }
 
 function buildFilters() {
-  const uniq = k => [...new Set(all.map(r=>r[k]).filter(Boolean))].sort();
-  const opt  = arr => arr.map(v=>`<option value="${v}">${v}</option>`).join('');
+  function uniq(k) { return [...new Set(all.map(function(r){ return r[k]; }).filter(Boolean))].sort(); }
+  function opt(arr) { return arr.map(function(v){ return '<option value="' + v + '">' + v + '</option>'; }).join(''); }
   document.getElementById('f-t').innerHTML = '<option value="">Todas</option>' + opt(uniq('NOMBRE_TIENDA'));
   document.getElementById('f-p').innerHTML = '<option value="">Todos</option>' + opt(uniq('PROVEEDOR'));
 }
 
 function applyFilters() {
-  const t=document.getElementById('f-t').value, p=document.getElementById('f-p').value,
-    s=document.getElementById('f-s').value, fc=document.getElementById('f-fc').value,
-    ft=document.getElementById('f-ft').value, h=document.getElementById('f-h').value,
-    q=document.getElementById('f-q').value.toLowerCase();
-
-  fil = all.filter(r => {
-    if (t && r.NOMBRE_TIENDA!==t) return false;
-    if (p && r.PROVEEDOR!==p) return false;
-    if (s && r.STATUS_PO!==s) return false;
-    if (fc && r.FLAG_CANTIDAD!==fc) return false;
-    if (ft && r.FLAG_TIEMPO!==ft) return false;
-    if (h==='FUERA' && !String(r.FUERA_DE_HORARIO).includes('FUERA')) return false;
-    if (h==='EN'    && !String(r.FUERA_DE_HORARIO).includes('EN HORARIO')) return false;
-    if (q && ![r.NRO_OC,r.RESPONSABLE_RECEPCION,r.PROVEEDOR,r.NOMBRE_TIENDA]
-               .some(v=>String(v).toLowerCase().includes(q))) return false;
+  var t = document.getElementById('f-t').value;
+  var p = document.getElementById('f-p').value;
+  var s = document.getElementById('f-s').value;
+  var fc = document.getElementById('f-fc').value;
+  var ft = document.getElementById('f-ft').value;
+  var h = document.getElementById('f-h').value;
+  var q = document.getElementById('f-q').value.toLowerCase();
+  fil = all.filter(function(r) {
+    if (t && r.NOMBRE_TIENDA !== t) return false;
+    if (p && r.PROVEEDOR !== p) return false;
+    if (s && r.STATUS_PO !== s) return false;
+    if (fc && r.FLAG_CANTIDAD !== fc) return false;
+    if (ft && r.FLAG_TIEMPO !== ft) return false;
+    if (h === 'FUERA' && String(r.FUERA_DE_HORARIO).indexOf('FUERA') === -1) return false;
+    if (h === 'EN' && String(r.FUERA_DE_HORARIO).indexOf('EN HORARIO') === -1) return false;
+    if (q && [r.NRO_OC, r.RESPONSABLE_RECEPCION, r.PROVEEDOR, r.NOMBRE_TIENDA].every(function(v){ return String(v).toLowerCase().indexOf(q) === -1; })) return false;
     return true;
   });
-
-  fil.sort((a,b) => {
-    const va=a[sCol]||'', vb=b[sCol]||'';
-    const na=parseFloat(va), nb=parseFloat(vb);
-    if (!isNaN(na)&&!isNaN(nb)) return sDir*(na-nb);
-    return sDir*String(va).localeCompare(String(vb));
+  fil.sort(function(a, b) {
+    var va = a[sCol] || '', vb = b[sCol] || '';
+    var na = parseFloat(va), nb = parseFloat(vb);
+    if (!isNaN(na) && !isNaN(nb)) return sDir * (na - nb);
+    return sDir * String(va).localeCompare(String(vb));
   });
-
-  updateKPIs(); pg=1; render();
-  document.getElementById('fcount').textContent =
-    `${fil.length.toLocaleString('es-CL')} de ${all.length.toLocaleString('es-CL')} registros`;
+  updateKPIs(); pg = 1; render();
+  document.getElementById('fcount').textContent = fil.length.toLocaleString('es-CL') + ' de ' + all.length.toLocaleString('es-CL') + ' registros';
 }
 
 function updateKPIs() {
-  const fills = fil.map(r=>parseFloat(r.FILLRATE_PCT)).filter(n=>!isNaN(n));
-  const mins  = fil.map(r=>parseInt(r.TOTAL_MIN_RECEPCION)).filter(n=>!isNaN(n)&&n>0);
-  document.getElementById('k-total').textContent  = fil.length.toLocaleString('es-CL');
-  document.getElementById('k-fill').textContent   = fills.length ? (fills.reduce((a,b)=>a+b,0)/fills.length).toFixed(1)+'%' : '—';
-  document.getElementById('k-falt').textContent   = fil.filter(r=>r.FLAG_CANTIDAD==='FALTANTE').length;
-  document.getElementById('k-fuera').textContent  = fil.filter(r=>String(r.FUERA_DE_HORARIO).includes('FUERA')).length;
-  document.getElementById('k-lento').textContent  = fil.filter(r=>r.FLAG_TIEMPO==='> 60 MIN').length;
-  document.getElementById('k-avgmin').textContent = mins.length ? Math.round(mins.reduce((a,b)=>a+b,0)/mins.length)+' min' : '—';
+  var fills = fil.map(function(r){ return parseFloat(r.FILLRATE_PCT); }).filter(function(n){ return !isNaN(n); });
+  var mins = fil.map(function(r){ return parseInt(r.TOTAL_MIN_RECEPCION); }).filter(function(n){ return !isNaN(n) && n > 0; });
+  document.getElementById('k-total').textContent = fil.length.toLocaleString('es-CL');
+  document.getElementById('k-fill').textContent = fills.length ? (fills.reduce(function(a,b){return a+b;},0)/fills.length).toFixed(1) + '%' : '—';
+  document.getElementById('k-falt').textContent = fil.filter(function(r){ return r.FLAG_CANTIDAD === 'FALTANTE'; }).length;
+  document.getElementById('k-fuera').textContent = fil.filter(function(r){ return String(r.FUERA_DE_HORARIO).indexOf('FUERA') > -1; }).length;
+  document.getElementById('k-lento').textContent = fil.filter(function(r){ return r.FLAG_TIEMPO === '> 60 MIN'; }).length;
+  document.getElementById('k-avgmin').textContent = mins.length ? Math.round(mins.reduce(function(a,b){return a+b;},0)/mins.length) + ' min' : '—';
 }
 
 function render() {
-  const start=(pg-1)*PAGE, slice=fil.slice(start, start+PAGE);
-  const tbody=document.getElementById('tbody');
+  var start = (pg-1)*PAGE, slice = fil.slice(start, start+PAGE);
+  var tbody = document.getElementById('tbody');
   if (!slice.length) {
-    tbody.innerHTML=`<tr><td colspan="16"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>`;
+    tbody.innerHTML = '<tr><td colspan="16"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>';
     renderPager(); return;
   }
-  tbody.innerHTML = slice.map(r => {
-    const fill=parseFloat(r.FILLRATE_PCT);
-    const fc=fill>=100?'var(--green)':fill>=85?'var(--yellow)':'var(--red)';
-    const frHtml=!isNaN(fill)
-      ?`<div class="fr"><div class="fr-bg"><div class="fr-bar" style="width:${Math.min(fill,100)}%;background:${fc}"></div></div><span class="fr-num" style="color:${fc}">${fill}%</span></div>`
-      :'—';
-
-    const s=(r.STATUS_PO||'').toUpperCase();
-    const sBadge=
-      s.includes('CLOSED_FULL')||s==='DELIVERED'    ? `<span class="badge b-full">${r.STATUS_PO}</span>`
-      : s.includes('PARTIAL')                        ? `<span class="badge b-partial">${r.STATUS_PO}</span>`
-      : s==='AT_STORE'                               ? `<span class="badge b-atstore">${r.STATUS_PO}</span>`
-      : `<span class="badge b-other">${r.STATUS_PO||'—'}</span>`;
-
-    const cBadge=
-      r.FLAG_CANTIDAD==='FALTANTE' ? `<span class="badge b-falt">FALTANTE</span>`
-      : r.FLAG_CANTIDAD==='SOBRANTE' ? `<span class="badge b-sobr">SOBRANTE</span>`
-      : r.FLAG_CANTIDAD==='OK'       ? `<span class="badge b-ok">OK</span>` : '—';
-
-    const tBadge=
-      r.FLAG_TIEMPO==='> 60 MIN' ? `<span class="badge b-60">> 60 MIN</span>`
-      : r.FLAG_TIEMPO==='OK'     ? `<span class="badge b-ok">OK</span>` : '—';
-
-    const hBadge=String(r.FUERA_DE_HORARIO).includes('FUERA')
-      ?`<span class="badge b-fuera">${r.FUERA_DE_HORARIO}</span>`
-      :`<span class="badge b-enhorario">✔ EN HORARIO</span>`;
-
-    const fLink=r.FACTURA_URL
-      ?`<a class="flink" href="${r.FACTURA_URL}" target="_blank">📄 Ver</a>`:'—';
-
-    return `<tr>
-      <td>${sBadge}</td><td>${frHtml}</td>
-      <td title="${r.NOMBRE_TIENDA}" style="max-width:160px;overflow:hidden;text-overflow:ellipsis">${r.NOMBRE_TIENDA||'—'}</td>
-      <td title="${r.PROVEEDOR}">${r.PROVEEDOR||'—'}</td>
-      <td>${r.RESPONSABLE_RECEPCION||'—'}</td>
-      <td style="font-family:monospace;font-size:12px">${r.NRO_OC||'—'}</td>
-      <td style="color:var(--muted);font-size:12px">${r.INICIO_RECEPCION||'—'}</td>
-      <td style="color:var(--muted);font-size:12px">${r.CIERRE_RECEPCION||'—'}</td>
-      <td style="text-align:right">${r.TOTAL_MIN_RECEPCION||'—'}</td>
-      <td style="text-align:right">${r.QTY_SOLICITADA||'—'}</td>
-      <td style="text-align:right">${r.QTY_RECIBIDA||'—'}</td>
-      <td>${hBadge}</td><td>${cBadge}</td><td>${tBadge}</td>
-      <td style="font-family:monospace;font-size:11px">${r.NUMERO_FACTURA||'—'}</td>
-      <td>${fLink}</td>
-    </tr>`;
+  tbody.innerHTML = slice.map(function(r) {
+    var fill = parseFloat(r.FILLRATE_PCT);
+    var fc = fill >= 100 ? 'var(--green)' : fill >= 85 ? 'var(--yellow)' : 'var(--red)';
+    var frHtml = !isNaN(fill) ? '<div class="fr"><div class="fr-bg"><div class="fr-bar" style="width:' + Math.min(fill,100) + '%;background:' + fc + '"></div></div><span class="fr-num" style="color:' + fc + '">' + fill + '%</span></div>' : '—';
+    var s = (r.STATUS_PO || '').toUpperCase();
+    var sBadge = s.indexOf('CLOSED_FULL') > -1 || s === 'DELIVERED' ? '<span class="badge b-full">' + r.STATUS_PO + '</span>' : s.indexOf('PARTIAL') > -1 ? '<span class="badge b-partial">' + r.STATUS_PO + '</span>' : s === 'AT_STORE' ? '<span class="badge b-atstore">' + r.STATUS_PO + '</span>' : '<span class="badge b-other">' + (r.STATUS_PO||'—') + '</span>';
+    var cBadge = r.FLAG_CANTIDAD === 'FALTANTE' ? '<span class="badge b-falt">FALTANTE</span>' : r.FLAG_CANTIDAD === 'SOBRANTE' ? '<span class="badge b-sobr">SOBRANTE</span>' : r.FLAG_CANTIDAD === 'OK' ? '<span class="badge b-ok">OK</span>' : '—';
+    var tBadge = r.FLAG_TIEMPO === '> 60 MIN' ? '<span class="badge b-60">> 60 MIN</span>' : r.FLAG_TIEMPO === 'OK' ? '<span class="badge b-ok">OK</span>' : '—';
+    var hBadge = String(r.FUERA_DE_HORARIO).indexOf('FUERA') > -1 ? '<span class="badge b-fuera">' + r.FUERA_DE_HORARIO + '</span>' : '<span class="badge b-enhorario">✔ EN HORARIO</span>';
+    var fLink = r.FACTURA_URL ? '<a class="flink" href="' + r.FACTURA_URL + '" target="_blank">📄 Ver</a>' : '—';
+    return '<tr><td>' + sBadge + '</td><td>' + frHtml + '</td><td title="' + r.NOMBRE_TIENDA + '" style="max-width:160px;overflow:hidden;text-overflow:ellipsis">' + (r.NOMBRE_TIENDA||'—') + '</td><td>' + (r.PROVEEDOR||'—') + '</td><td>' + (r.RESPONSABLE_RECEPCION||'—') + '</td><td style="font-family:monospace;font-size:12px">' + (r.NRO_OC||'—') + '</td><td style="color:var(--muted);font-size:12px">' + (r.INICIO_RECEPCION||'—') + '</td><td style="color:var(--muted);font-size:12px">' + (r.CIERRE_RECEPCION||'—') + '</td><td style="text-align:right">' + (r.TOTAL_MIN_RECEPCION||'—') + '</td><td style="text-align:right">' + (r.QTY_SOLICITADA||'—') + '</td><td style="text-align:right">' + (r.QTY_RECIBIDA||'—') + '</td><td>' + hBadge + '</td><td>' + cBadge + '</td><td>' + tBadge + '</td><td style="font-family:monospace;font-size:11px">' + (r.NUMERO_FACTURA||'—') + '</td><td>' + fLink + '</td></tr>';
   }).join('');
   renderPager();
 }
 
 function renderPager() {
-  const pages=Math.ceil(fil.length/PAGE);
-  const s=(pg-1)*PAGE+1, e=Math.min(pg*PAGE,fil.length);
-  document.getElementById('pinfo').textContent = fil.length?`Mostrando ${s}–${e} de ${fil.length.toLocaleString('es-CL')}`:'';
-  const c=document.getElementById('pbtns');
-  if (pages<=1){c.innerHTML='';return;}
-  let h=`<button class="pbtn" onclick="goP(${pg-1})" ${pg===1?'disabled':''}>‹</button>`;
-  for(let i=1;i<=pages;i++){
-    if(i===1||i===pages||Math.abs(i-pg)<=2) h+=`<button class="pbtn ${i===pg?'on':''}" onclick="goP(${i})">${i}</button>`;
-    else if(Math.abs(i-pg)===3) h+=`<span style="color:var(--muted);padding:4px 5px">…</span>`;
+  var pages = Math.ceil(fil.length/PAGE);
+  var s = (pg-1)*PAGE+1, e = Math.min(pg*PAGE, fil.length);
+  document.getElementById('pinfo').textContent = fil.length ? 'Mostrando ' + s + '–' + e + ' de ' + fil.length.toLocaleString('es-CL') : '';
+  var c = document.getElementById('pbtns');
+  if (pages <= 1) { c.innerHTML = ''; return; }
+  var h = '<button class="pbtn" onclick="goP(' + (pg-1) + ')" ' + (pg===1?'disabled':'') + '>‹</button>';
+  for (var i = 1; i <= pages; i++) {
+    if (i===1||i===pages||Math.abs(i-pg)<=2) h += '<button class="pbtn ' + (i===pg?'on':'') + '" onclick="goP(' + i + ')">' + i + '</button>';
+    else if (Math.abs(i-pg)===3) h += '<span style="color:var(--muted);padding:4px 5px">…</span>';
   }
-  h+=`<button class="pbtn" onclick="goP(${pg+1})" ${pg===pages?'disabled':''}>›</button>`;
-  c.innerHTML=h;
+  h += '<button class="pbtn" onclick="goP(' + (pg+1) + ')" ' + (pg===pages?'disabled':'') + '>›</button>';
+  c.innerHTML = h;
 }
 
-function goP(p){const pages=Math.ceil(fil.length/PAGE);if(p<1||p>pages)return;pg=p;render();window.scrollTo({top:0,behavior:'smooth'});}
+function goP(p) { var pages=Math.ceil(fil.length/PAGE); if(p<1||p>pages)return; pg=p; render(); window.scrollTo({top:0,behavior:'smooth'}); }
 
-function sortBy(col){
-  if(sCol===col)sDir*=-1;else{sCol=col;sDir=-1;}
-  document.querySelectorAll('th').forEach(th=>{
+function sortBy(col) {
+  if (sCol===col) sDir*=-1; else { sCol=col; sDir=-1; }
+  document.querySelectorAll('th').forEach(function(th){
     th.classList.remove('asc','desc');
-    if(th.dataset.col===col)th.classList.add(sDir===1?'asc':'desc');
+    if (th.dataset.col===col) th.classList.add(sDir===1?'asc':'desc');
   });
   applyFilters();
 }
 
-function clearF(){
-  ['f-t','f-p','f-s','f-fc','f-ft','f-h'].forEach(id=>document.getElementById(id).value='');
+function clearF() {
+  ['f-t','f-p','f-s','f-fc','f-ft','f-h'].forEach(function(id){ document.getElementById(id).value=''; });
   document.getElementById('f-q').value=''; applyFilters();
 }
 
-function exportCSV(){
-  if(!fil.length)return;
-  const keys=Object.keys(fil[0]);
-  const rows=[keys.join(','),...fil.map(r=>keys.map(k=>`"${(r[k]||'').replace(/"/g,'""')}"`).join(','))];
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'}));
-  a.download=`recepciones_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+function exportCSV() {
+  if (!fil.length) return;
+  var keys = Object.keys(fil[0]);
+  var rows = [keys.join(',')].concat(fil.map(function(r){ return keys.map(function(k){ return '"' + (r[k]||'').replace(/"/g,'""') + '"'; }).join(','); }));
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([rows.join('\n')], {type:'text/csv;charset=utf-8;'}));
+  a.download = 'recepciones_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
 }
 
-// Auto-cargar al abrir
 loadData();
 </script>
 </body>
