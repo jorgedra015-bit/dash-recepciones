@@ -26,6 +26,12 @@
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
   .btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-family:var(--font);transition:background .15s;}
   .btn:hover{background:var(--border);}
+  .source-bar{background:var(--surface2);border-bottom:1px solid var(--border);padding:8px 24px;display:flex;align-items:center;gap:10px;}
+  .source-bar label{font-size:11px;color:var(--muted);white-space:nowrap;}
+  .source-bar input{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:5px;font-size:12px;font-family:var(--font);}
+  .source-bar input:focus{outline:none;border-color:var(--accent2);}
+  .btn-connect{background:var(--accent);color:#fff;border:none;padding:6px 16px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font);}
+  .btn-connect:hover{opacity:.85;}
   .kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:16px 24px;}
   .kpi{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;}
   .kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;}
@@ -34,10 +40,10 @@
   .ca{color:var(--accent)}.cg{color:var(--green)}.cy{color:var(--yellow)}.cr{color:var(--red)}.cb{color:var(--accent2)}
   .filters{padding:0 24px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
   .fg{display:flex;align-items:center;gap:5px;}
-  .fg label{font-size:11px;color:var(--muted);}
+  .fg label{font-size:11px;color:var(--muted);white-space:nowrap;}
   select,.fi{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:5px 9px;border-radius:5px;font-size:12px;font-family:var(--font);}
   select:focus,.fi:focus{outline:none;border-color:var(--accent2);}
-  .fi{width:180px;}
+  .fi{width:130px;}
   .fcount{font-size:11px;color:var(--muted);margin-left:auto;}
   .table-wrap{padding:0 24px;overflow-x:auto;}
   table{width:100%;border-collapse:collapse;white-space:nowrap;}
@@ -59,6 +65,7 @@
   .b-60{background:#3a0d0d;color:var(--red);}
   .b-fuera{background:#3a2a00;color:var(--yellow);}
   .b-enhorario{background:#0d3320;color:var(--green);}
+  .b-edit{background:#1a2035;color:var(--accent2);font-size:10px;}
   .fr{display:flex;align-items:center;gap:7px;min-width:110px;}
   .fr-bg{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;}
   .fr-bar{height:100%;border-radius:3px;}
@@ -90,15 +97,15 @@
     </div>
   </div>
   <div class="hright">
-    <div id="status"><span class="dot y"></span>Cargando…</div>
+    <div id="status"><span class="dot y"></span>Sin conectar</div>
     <button class="btn" onclick="loadData()">↻ Actualizar</button>
   </div>
 </header>
-<div style="background:#1a1d27;border-bottom:1px solid #2e3350;padding:8px 24px;display:flex;align-items:center;gap:10px;">
-  <span style="font-size:11px;color:#7b82a0;white-space:nowrap;">📄 Link CSV:</span>
-  <input id="csv-input" type="text" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=540661722&single=true&output=csv"
-    style="flex:1;background:#0f1117;border:1px solid #2e3350;color:#e8eaf0;padding:5px 10px;border-radius:5px;font-size:12px;font-family:monospace;">
-  <button class="btn" onclick="CSV_URL=document.getElementById('csv-input').value;loadData();" style="white-space:nowrap;">Conectar</button>
+
+<div class="source-bar">
+  <label>📄 Link CSV:</label>
+  <input type="text" id="csv-input" placeholder="Pega el link CSV del Sheet de Aleph…" />
+  <button class="btn-connect" onclick="loadData()">Conectar</button>
 </div>
 
 <div class="kpi-row">
@@ -107,10 +114,12 @@
   <div class="kpi"><div class="kpi-label">Con Faltante</div><div class="kpi-value cy" id="k-falt">—</div><div class="kpi-sub">qty recibida &lt; pedida</div></div>
   <div class="kpi"><div class="kpi-label">Fuera de Horario</div><div class="kpi-value cr" id="k-fuera">—</div><div class="kpi-sub">antes 7h o después 18h</div></div>
   <div class="kpi"><div class="kpi-label">> 60 Min</div><div class="kpi-value cr" id="k-lento">—</div><div class="kpi-sub">recepciones lentas</div></div>
-  <div class="kpi"><div class="kpi-label">Tiempo Promedio</div><div class="kpi-value cb" id="k-avgmin">—</div><div class="kpi-sub">minutos por recepción</div></div>
+  <div class="kpi"><div class="kpi-label">Con Reedición</div><div class="kpi-value cb" id="k-edit">—</div><div class="kpi-sub">recepciones reeditadas</div></div>
 </div>
 
 <div class="filters">
+  <div class="fg"><label>Desde</label><input type="date" id="f-desde" class="fi" onchange="applyFilters()"></div>
+  <div class="fg"><label>Hasta</label><input type="date" id="f-hasta" class="fi" onchange="applyFilters()"></div>
   <div class="fg"><label>Tienda</label><select id="f-t" onchange="applyFilters()"><option value="">Todas</option></select></div>
   <div class="fg"><label>Proveedor</label><select id="f-p" onchange="applyFilters()"><option value="">Todos</option></select></div>
   <div class="fg"><label>Estado OC</label>
@@ -129,7 +138,10 @@
   <div class="fg"><label>Horario</label>
     <select id="f-h" onchange="applyFilters()"><option value="">Todos</option><option value="FUERA">Fuera de horario</option><option value="EN">En horario</option></select>
   </div>
-  <div class="fg"><label>Buscar</label><input class="fi" type="text" id="f-q" placeholder="OC / Responsable / Proveedor…" oninput="applyFilters()"></div>
+  <div class="fg"><label>Reedición</label>
+    <select id="f-edit" onchange="applyFilters()"><option value="">Todos</option><option value="SI">Con reedición</option><option value="NO">Sin reedición</option></select>
+  </div>
+  <div class="fg"><label>Buscar</label><input class="fi" style="width:160px" type="text" id="f-q" placeholder="OC / Tienda / Proveedor…" oninput="applyFilters()"></div>
   <button class="btn" onclick="clearF()">✕ Limpiar</button>
   <button class="btn" onclick="exportCSV()">↓ CSV</button>
   <span class="fcount" id="fcount"></span>
@@ -141,30 +153,32 @@
       <th data-col="STATUS_PO">Estado OC</th>
       <th data-col="FILLRATE_PCT">Fillrate</th>
       <th data-col="NOMBRE_TIENDA">Tienda</th>
+      <th data-col="ID_TIENDA">ID</th>
       <th data-col="PROVEEDOR">Proveedor</th>
       <th data-col="RESPONSABLE_RECEPCION">Responsable</th>
       <th data-col="NRO_OC">Nro OC</th>
-      <th data-col="INICIO_RECEPCION">Inicio Recepción</th>
-      <th data-col="CIERRE_RECEPCION">Cierre Recepción</th>
-      <th data-col="TOTAL_MIN_RECEPCION">Min Total</th>
+      <th data-col="INICIO_RECEPCION">Inicio</th>
+      <th data-col="PRIMER_CIERRE">Primer Cierre</th>
+      <th data-col="EDICION_2">Reedición</th>
+      <th data-col="TOTAL_MIN_RECEPCION">Min</th>
       <th data-col="QTY_SOLICITADA">Qty Sol.</th>
       <th data-col="QTY_RECIBIDA">Qty Rec.</th>
       <th data-col="FUERA_DE_HORARIO">Horario</th>
       <th data-col="FLAG_CANTIDAD">Flag Cant.</th>
-      <th data-col="FLAG_TIEMPO">Flag Tiempo</th>
+      <th data-col="FLAG_TIEMPO">Flag T.</th>
       <th data-col="NUMERO_FACTURA">Nro Factura</th>
       <th>Factura</th>
     </tr></thead>
     <tbody id="tbody">
-      <tr><td colspan="16"><div class="state"><div class="spin"></div><p>Cargando datos…</p></div></td></tr>
+      <tr><td colspan="18"><div class="state"><div class="ico">📋</div><p>Pega el link CSV del Sheet de Aleph y haz clic en <strong>Conectar</strong></p></div></td></tr>
     </tbody>
   </table>
 </div>
 <div class="pager"><span class="pinfo" id="pinfo"></span><div class="pbtns" id="pbtns"></div></div>
 
 <script>
-// URL PUBLICA del Sheet de Aleph (Hoja 1 publicada como CSV)
 var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=540661722&single=true&output=csv';
+document.getElementById('csv-input').value = CSV_URL;
 
 var PAGE = 100;
 var all = [], fil = [], pg = 1, sCol = 'INICIO_RECEPCION', sDir = -1;
@@ -173,36 +187,26 @@ document.querySelectorAll('th[data-col]').forEach(function(th) {
   th.addEventListener('click', function() { sortBy(th.dataset.col); });
 });
 
-async function loadData() {
+function loadData() {
   var inputEl = document.getElementById('csv-input');
   if (inputEl && inputEl.value.trim()) CSV_URL = inputEl.value.trim();
   setStatus('y', 'Cargando…');
-  document.getElementById('tbody').innerHTML = '<tr><td colspan="16"><div class="state"><div class="spin"></div><p>Leyendo datos…</p></div></td></tr>';
-
-  var text = null;
-  try {
-    var r = await fetch(CSV_URL, { cache: 'no-store', mode: 'cors' });
-    if (r.ok) text = await r.text();
-    if (!text || text.trim().startsWith('<') || text.length < 100) text = null;
-  } catch(e) {}
-
-  if (!text) {
-    setStatus('r', 'Error: no se pudo cargar el CSV');
-    document.getElementById('tbody').innerHTML = '<tr><td colspan="16"><div class="state"><div class="ico">⚠️</div><p>No se pudo cargar el CSV.<br>Verifica que el link sea correcto y el Sheet esté publicado.</p></div></td></tr>';
-    return;
-  }
-
-  try {
-    all = parseCSV(text);
-    if (!all.length) throw new Error('Sin datos válidos');
-    buildFilters();
-    applyFilters();
-    var ts = new Date().toLocaleString('es-CL', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
-    setStatus('g', 'Actualizado ' + ts + ' · ' + all.length.toLocaleString('es-CL') + ' filas');
-  } catch(e) {
-    setStatus('r', 'Error: ' + e.message);
-    document.getElementById('tbody').innerHTML = '<tr><td colspan="16"><div class="state"><div class="ico">⚠️</div><p>' + e.message + '</p></div></td></tr>';
-  }
+  document.getElementById('tbody').innerHTML = '<tr><td colspan="18"><div class="state"><div class="spin"></div><p>Leyendo datos…</p></div></td></tr>';
+  fetch(CSV_URL, { cache: 'no-store', mode: 'cors' })
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(function(text) {
+      if (!text || text.trim().startsWith('<')) throw new Error('No se recibió CSV válido');
+      all = parseCSV(text);
+      if (!all.length) throw new Error('Sin datos');
+      buildFilters();
+      applyFilters();
+      var t = new Date().toLocaleString('es-CL',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+      setStatus('g', 'Actualizado ' + t + ' · ' + all.length.toLocaleString('es-CL') + ' filas');
+    })
+    .catch(function(e) {
+      setStatus('r', 'Error: ' + e.message);
+      document.getElementById('tbody').innerHTML = '<tr><td colspan="18"><div class="state"><div class="ico">⚠️</div><p>' + e.message + '</p></div></td></tr>';
+    });
 }
 
 function setStatus(c, msg) {
@@ -214,14 +218,9 @@ function parseCSV(text) {
   function splitLine(line) {
     var r=[], c='', inQ=false;
     for (var i=0; i<line.length; i++) {
-      var ch=line[i];
-      if(ch==='"'){inQ=!inQ;}
-      else if(ch===','&&!inQ){r.push(c);c='';}
-      else c+=ch;
-    }
-    r.push(c); return r;
+      var ch=line[i]; if(ch==='"'){inQ=!inQ;} else if(ch===','&&!inQ){r.push(c);c='';} else c+=ch;
+    } r.push(c); return r;
   }
-  // Buscar fila real de headers: cells[0]='' y cells[1]='NOMBRE_TIENDA'
   var hIdx = 0;
   for (var i = 0; i < Math.min(lines.length, 25); i++) {
     var cells = splitLine(lines[i]).map(function(h){ return h.replace(/^"|"$/g,'').trim(); });
@@ -235,26 +234,23 @@ function parseCSV(text) {
   for (var j = hIdx + 1; j < lines.length; j++) {
     var vals = splitLine(lines[j]).map(function(v){ return v.replace(/^"|"$/g,'').trim(); }).slice(offset);
     if (vals.every(function(v){ return !v; })) continue;
-    var obj = {};
-    headers.forEach(function(h, k){ obj[h] = vals[k] || ''; });
+    var obj = {}; headers.forEach(function(h, k){ obj[h] = vals[k] || ''; });
     if (obj['NOMBRE_TIENDA'] || obj['NRO_OC']) rows.push(obj);
   }
   return rows;
 }
 
-function splitLine(line) {
-  var r = [], c = '', inQ = false;
-  for (var i = 0; i < line.length; i++) {
-    var ch = line[i];
-    if (ch === '"') { inQ = !inQ; }
-    else if (ch === ',' && !inQ) { r.push(c); c = ''; }
-    else { c += ch; }
-  }
-  r.push(c);
-  return r;
-}
-
 function buildFilters() {
+  // Auto-setear fechas últimos 29 días
+  var desdeEl = document.getElementById('f-desde');
+  var hastaEl = document.getElementById('f-hasta');
+  if (!desdeEl.value) {
+    var d = new Date(); d.setDate(d.getDate() - 29);
+    desdeEl.value = d.toISOString().slice(0,10);
+  }
+  if (!hastaEl.value) {
+    hastaEl.value = new Date().toISOString().slice(0,10);
+  }
   function uniq(k) { return [...new Set(all.map(function(r){ return r[k]; }).filter(Boolean))].sort(); }
   function opt(arr) { return arr.map(function(v){ return '<option value="' + v + '">' + v + '</option>'; }).join(''); }
   document.getElementById('f-t').innerHTML = '<option value="">Todas</option>' + opt(uniq('NOMBRE_TIENDA'));
@@ -262,14 +258,21 @@ function buildFilters() {
 }
 
 function applyFilters() {
+  var desde = document.getElementById('f-desde').value;
+  var hasta = document.getElementById('f-hasta').value;
   var t = document.getElementById('f-t').value;
   var p = document.getElementById('f-p').value;
   var s = document.getElementById('f-s').value;
   var fc = document.getElementById('f-fc').value;
   var ft = document.getElementById('f-ft').value;
   var h = document.getElementById('f-h').value;
+  var edit = document.getElementById('f-edit').value;
   var q = document.getElementById('f-q').value.toLowerCase();
+
   fil = all.filter(function(r) {
+    var fecha = (r.INICIO_RECEPCION || r.PRIMER_CIERRE || '').slice(0,10);
+    if (desde && fecha < desde) return false;
+    if (hasta && fecha > hasta) return false;
     if (t && r.NOMBRE_TIENDA !== t) return false;
     if (p && r.PROVEEDOR !== p) return false;
     if (s && r.STATUS_PO !== s) return false;
@@ -277,35 +280,38 @@ function applyFilters() {
     if (ft && r.FLAG_TIEMPO !== ft) return false;
     if (h === 'FUERA' && String(r.FUERA_DE_HORARIO).indexOf('FUERA') === -1) return false;
     if (h === 'EN' && String(r.FUERA_DE_HORARIO).indexOf('EN HORARIO') === -1) return false;
+    if (edit === 'SI' && !r.EDICION_2) return false;
+    if (edit === 'NO' && r.EDICION_2) return false;
     if (q && [r.NRO_OC, r.RESPONSABLE_RECEPCION, r.PROVEEDOR, r.NOMBRE_TIENDA].every(function(v){ return String(v).toLowerCase().indexOf(q) === -1; })) return false;
     return true;
   });
+
   fil.sort(function(a, b) {
     var va = a[sCol] || '', vb = b[sCol] || '';
     var na = parseFloat(va), nb = parseFloat(vb);
     if (!isNaN(na) && !isNaN(nb)) return sDir * (na - nb);
     return sDir * String(va).localeCompare(String(vb));
   });
+
   updateKPIs(); pg = 1; render();
   document.getElementById('fcount').textContent = fil.length.toLocaleString('es-CL') + ' de ' + all.length.toLocaleString('es-CL') + ' registros';
 }
 
 function updateKPIs() {
   var fills = fil.map(function(r){ return parseFloat(r.FILLRATE_PCT); }).filter(function(n){ return !isNaN(n); });
-  var mins = fil.map(function(r){ return parseInt(r.TOTAL_MIN_RECEPCION); }).filter(function(n){ return !isNaN(n) && n > 0; });
   document.getElementById('k-total').textContent = fil.length.toLocaleString('es-CL');
   document.getElementById('k-fill').textContent = fills.length ? (fills.reduce(function(a,b){return a+b;},0)/fills.length).toFixed(1) + '%' : '—';
   document.getElementById('k-falt').textContent = fil.filter(function(r){ return r.FLAG_CANTIDAD === 'FALTANTE'; }).length;
   document.getElementById('k-fuera').textContent = fil.filter(function(r){ return String(r.FUERA_DE_HORARIO).indexOf('FUERA') > -1; }).length;
   document.getElementById('k-lento').textContent = fil.filter(function(r){ return r.FLAG_TIEMPO === '> 60 MIN'; }).length;
-  document.getElementById('k-avgmin').textContent = mins.length ? Math.round(mins.reduce(function(a,b){return a+b;},0)/mins.length) + ' min' : '—';
+  document.getElementById('k-edit').textContent = fil.filter(function(r){ return r.EDICION_2 && r.EDICION_2.trim() !== ''; }).length;
 }
 
 function render() {
   var start = (pg-1)*PAGE, slice = fil.slice(start, start+PAGE);
   var tbody = document.getElementById('tbody');
   if (!slice.length) {
-    tbody.innerHTML = '<tr><td colspan="16"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="18"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>';
     renderPager(); return;
   }
   tbody.innerHTML = slice.map(function(r) {
@@ -317,8 +323,28 @@ function render() {
     var cBadge = r.FLAG_CANTIDAD === 'FALTANTE' ? '<span class="badge b-falt">FALTANTE</span>' : r.FLAG_CANTIDAD === 'SOBRANTE' ? '<span class="badge b-sobr">SOBRANTE</span>' : r.FLAG_CANTIDAD === 'OK' ? '<span class="badge b-ok">OK</span>' : '—';
     var tBadge = r.FLAG_TIEMPO === '> 60 MIN' ? '<span class="badge b-60">> 60 MIN</span>' : r.FLAG_TIEMPO === 'OK' ? '<span class="badge b-ok">OK</span>' : '—';
     var hBadge = String(r.FUERA_DE_HORARIO).indexOf('FUERA') > -1 ? '<span class="badge b-fuera">' + r.FUERA_DE_HORARIO + '</span>' : '<span class="badge b-enhorario">✔ EN HORARIO</span>';
+    var editCell = r.EDICION_2 && r.EDICION_2.trim() ? '<span class="badge b-edit">✏ ' + r.EDICION_2 + '</span>' : '—';
     var fLink = r.FACTURA_URL ? '<a class="flink" href="' + r.FACTURA_URL + '" target="_blank">📄 Ver</a>' : '—';
-    return '<tr><td>' + sBadge + '</td><td>' + frHtml + '</td><td title="' + r.NOMBRE_TIENDA + '" style="max-width:160px;overflow:hidden;text-overflow:ellipsis">' + (r.NOMBRE_TIENDA||'—') + '</td><td>' + (r.PROVEEDOR||'—') + '</td><td>' + (r.RESPONSABLE_RECEPCION||'—') + '</td><td style="font-family:monospace;font-size:12px">' + (r.NRO_OC||'—') + '</td><td style="color:var(--muted);font-size:12px">' + (r.INICIO_RECEPCION||'—') + '</td><td style="color:var(--muted);font-size:12px">' + (r.CIERRE_RECEPCION||'—') + '</td><td style="text-align:right">' + (r.TOTAL_MIN_RECEPCION||'—') + '</td><td style="text-align:right">' + (r.QTY_SOLICITADA||'—') + '</td><td style="text-align:right">' + (r.QTY_RECIBIDA||'—') + '</td><td>' + hBadge + '</td><td>' + cBadge + '</td><td>' + tBadge + '</td><td style="font-family:monospace;font-size:11px">' + (r.NUMERO_FACTURA||'—') + '</td><td>' + fLink + '</td></tr>';
+    return '<tr>' +
+      '<td>' + sBadge + '</td>' +
+      '<td>' + frHtml + '</td>' +
+      '<td title="' + r.NOMBRE_TIENDA + '" style="max-width:160px;overflow:hidden;text-overflow:ellipsis">' + (r.NOMBRE_TIENDA||'—') + '</td>' +
+      '<td style="color:var(--muted);font-size:11px">' + (r.ID_TIENDA||'—') + '</td>' +
+      '<td title="' + r.PROVEEDOR + '" style="max-width:130px;overflow:hidden;text-overflow:ellipsis">' + (r.PROVEEDOR||'—') + '</td>' +
+      '<td>' + (r.RESPONSABLE_RECEPCION||'—') + '</td>' +
+      '<td style="font-family:monospace;font-size:12px">' + (r.NRO_OC||'—') + '</td>' +
+      '<td style="color:var(--muted);font-size:12px">' + (r.INICIO_RECEPCION||'—') + '</td>' +
+      '<td style="color:var(--green);font-size:12px;font-weight:600">' + (r.PRIMER_CIERRE||'—') + '</td>' +
+      '<td>' + editCell + '</td>' +
+      '<td style="text-align:right">' + (r.TOTAL_MIN_RECEPCION||'—') + '</td>' +
+      '<td style="text-align:right">' + (r.QTY_SOLICITADA||'—') + '</td>' +
+      '<td style="text-align:right">' + (r.QTY_RECIBIDA||'—') + '</td>' +
+      '<td>' + hBadge + '</td>' +
+      '<td>' + cBadge + '</td>' +
+      '<td>' + tBadge + '</td>' +
+      '<td style="font-family:monospace;font-size:11px">' + (r.NUMERO_FACTURA||'—') + '</td>' +
+      '<td>' + fLink + '</td>' +
+    '</tr>';
   }).join('');
   renderPager();
 }
@@ -350,7 +376,7 @@ function sortBy(col) {
 }
 
 function clearF() {
-  ['f-t','f-p','f-s','f-fc','f-ft','f-h'].forEach(function(id){ document.getElementById(id).value=''; });
+  ['f-desde','f-hasta','f-t','f-p','f-s','f-fc','f-ft','f-h','f-edit'].forEach(function(id){ document.getElementById(id).value=''; });
   document.getElementById('f-q').value=''; applyFilters();
 }
 
@@ -359,12 +385,9 @@ function exportCSV() {
   var keys = Object.keys(fil[0]);
   var rows = [keys.join(',')].concat(fil.map(function(r){ return keys.map(function(k){ return '"' + (r[k]||'').replace(/"/g,'""') + '"'; }).join(','); }));
   var a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([rows.join('\n')], {type:'text/csv;charset=utf-8;'}));
-  a.download = 'recepciones_' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click();
+  a.href = URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'}));
+  a.download = 'recepciones_' + new Date().toISOString().slice(0,10) + '.csv'; a.click();
 }
-
-loadData();
 </script>
 </body>
 </html>
