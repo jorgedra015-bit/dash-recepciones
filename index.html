@@ -15,7 +15,7 @@
   header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
   .logo{display:flex;align-items:center;gap:10px;}
   .logo-icon{width:30px;height:30px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;}
-  .logo-text{font-size:15px;font-weight:700;letter-spacing:-0.3px;}
+  .logo-text{font-size:15px;font-weight:700;}
   .logo-sub{font-size:11px;color:var(--muted);}
   .hright{display:flex;align-items:center;gap:10px;}
   #status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;}
@@ -26,12 +26,24 @@
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
   .btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 12px;border-radius:5px;cursor:pointer;font-size:12px;font-family:var(--font);transition:background .15s;}
   .btn:hover{background:var(--border);}
-  .kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 24px;}
+  /* TABS */
+  .tabs{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;gap:4px;}
+  .tab{padding:10px 20px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;transition:all .15s;}
+  .tab:hover{color:var(--text);}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+  /* TAB CONTENT */
+  .tab-content{display:none;}
+  .tab-content.active{display:block;}
+  /* KPIs */
+  .kpi-row{display:grid;gap:10px;padding:14px 24px;}
+  .kpi-row.cols6{grid-template-columns:repeat(6,1fr);}
+  .kpi-row.cols4{grid-template-columns:repeat(4,1fr);}
   .kpi{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
   .kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;}
-  .kpi-value{font-size:22px;font-weight:700;letter-spacing:-0.5px;}
+  .kpi-value{font-size:22px;font-weight:700;}
   .kpi-sub{font-size:10px;color:var(--muted);margin-top:2px;}
   .ca{color:var(--accent)}.cg{color:var(--green)}.cy{color:var(--yellow)}.cr{color:var(--red)}.cb{color:var(--accent2)}
+  /* FILTERS */
   .filters{padding:0 24px 12px;display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
   .fg{display:flex;align-items:center;gap:5px;}
   .fg label{font-size:11px;color:var(--muted);white-space:nowrap;}
@@ -39,8 +51,8 @@
   select:focus,.fi:focus{outline:none;border-color:var(--accent2);}
   .fi{width:120px;}
   .fcount{font-size:11px;color:var(--muted);margin-left:auto;}
-  /* SECTION HEADERS */
-  .section-header{padding:12px 24px 8px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);}
+  /* SECTION */
+  .section-header{padding:10px 24px 6px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);}
   .section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
   .section-count{font-size:11px;color:var(--muted);}
   /* TABLES */
@@ -56,15 +68,16 @@
   .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;}
   .b-full{background:#0d3320;color:var(--green);}
   .b-partial{background:#3a2a00;color:var(--yellow);}
-  .b-atstore{background:#3a0d0d;color:var(--red);}
-  .b-other{background:var(--surface2);color:var(--muted);}
+  .b-atstore,.b-cancel{background:#3a0d0d;color:var(--red);}
+  .b-other,.b-created{background:var(--surface2);color:var(--muted);}
+  .b-progress{background:#1a2a3a;color:var(--accent2);}
   .b-ok{background:#0d3320;color:var(--green);}
   .b-falt{background:#3a2a00;color:var(--yellow);}
   .b-sobr{background:#1a1a3a;color:var(--accent2);}
   .b-60{background:#3a0d0d;color:var(--red);}
   .b-fuera{background:#3a2a00;color:var(--yellow);}
   .b-enhorario{background:#0d3320;color:var(--green);}
-  .b-edit{background:#1a2035;color:var(--accent2);font-size:10px;}
+  .b-edit{background:#1a2035;color:var(--accent2);}
   .fr{display:flex;align-items:center;gap:6px;min-width:100px;}
   .fr-bg{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;}
   .fr-bar{height:100%;border-radius:3px;}
@@ -91,7 +104,7 @@
     <div class="logo-icon">📦</div>
     <div>
       <div class="logo-text">Recepciones · Turbo CL</div>
-      <div class="logo-sub">Panel de seguimiento por proveedor</div>
+      <div class="logo-sub">Panel de operaciones</div>
     </div>
   </div>
   <div class="hright">
@@ -100,255 +113,294 @@
   </div>
 </header>
 
-<!-- KPIs -->
-<div class="kpi-row">
-  <div class="kpi"><div class="kpi-label">Total OC</div><div class="kpi-value ca" id="k-total">—</div><div class="kpi-sub">recepciones</div></div>
-  <div class="kpi"><div class="kpi-label">Fillrate Promedio</div><div class="kpi-value cg" id="k-fill">—</div><div class="kpi-sub">% recibido / solicitado</div></div>
-  <div class="kpi"><div class="kpi-label">Con Faltante</div><div class="kpi-value cy" id="k-falt">—</div><div class="kpi-sub">qty recibida &lt; pedida</div></div>
-  <div class="kpi"><div class="kpi-label">Fuera de Horario</div><div class="kpi-value cr" id="k-fuera">—</div><div class="kpi-sub">antes 7h o después 18h</div></div>
-  <div class="kpi"><div class="kpi-label">> 60 Min</div><div class="kpi-value cr" id="k-lento">—</div><div class="kpi-sub">recepciones lentas</div></div>
-  <div class="kpi"><div class="kpi-label">Con Reedición</div><div class="kpi-value cb" id="k-edit">—</div><div class="kpi-sub">recepciones reeditadas</div></div>
+<!-- PESTAÑAS -->
+<div class="tabs">
+  <div class="tab active" onclick="showTab('proveedores')">🚚 Proveedores</div>
+  <div class="tab" onclick="showTab('transferencias')">🔄 Transferencias</div>
 </div>
 
-<!-- FILTROS -->
-<div class="filters">
-  <div class="fg"><label>Desde</label><input type="date" id="f-desde" class="fi" onchange="applyFilters()"></div>
-  <div class="fg"><label>Hasta</label><input type="date" id="f-hasta" class="fi" onchange="applyFilters()"></div>
-  <div class="fg"><label>Tienda</label><select id="f-t" onchange="applyFilters()"><option value="">Todas</option></select></div>
-  <div class="fg"><label>Proveedor</label><select id="f-p" onchange="applyFilters()"><option value="">Todos</option></select></div>
-  <div class="fg"><label>Estado OC</label>
-    <select id="f-s" onchange="applyFilters()">
-      <option value="">Todos</option><option>DELIVERED</option><option>PARTIAL_DELIVERY</option>
-      <option>AT_STORE</option><option>CLOSED_FULL_DELIVERY</option><option>CLOSED_PARTIAL_DELIVERY</option>
-    </select>
+<!-- ===================== PESTAÑA PROVEEDORES ===================== -->
+<div id="tab-proveedores" class="tab-content active">
+  <div class="kpi-row cols6">
+    <div class="kpi"><div class="kpi-label">Total OC</div><div class="kpi-value ca" id="k-total">—</div><div class="kpi-sub">recepciones</div></div>
+    <div class="kpi"><div class="kpi-label">Fillrate Promedio</div><div class="kpi-value cg" id="k-fill">—</div><div class="kpi-sub">% recibido / solicitado</div></div>
+    <div class="kpi"><div class="kpi-label">Con Faltante</div><div class="kpi-value cy" id="k-falt">—</div><div class="kpi-sub">qty recibida &lt; pedida</div></div>
+    <div class="kpi"><div class="kpi-label">Fuera de Horario</div><div class="kpi-value cr" id="k-fuera">—</div><div class="kpi-sub">antes 7h o después 18h</div></div>
+    <div class="kpi"><div class="kpi-label">> 60 Min</div><div class="kpi-value cr" id="k-lento">—</div><div class="kpi-sub">recepciones lentas</div></div>
+    <div class="kpi"><div class="kpi-label">Con Reedición</div><div class="kpi-value cb" id="k-edit">—</div><div class="kpi-sub">recepciones reeditadas</div></div>
   </div>
-  <div class="fg"><label>Cantidad</label>
-    <select id="f-fc" onchange="applyFilters()"><option value="">Todos</option><option>FALTANTE</option><option>SOBRANTE</option><option>OK</option></select>
+  <div class="filters">
+    <div class="fg"><label>Desde</label><input type="date" id="p-desde" class="fi" onchange="applyProv()"></div>
+    <div class="fg"><label>Hasta</label><input type="date" id="p-hasta" class="fi" onchange="applyProv()"></div>
+    <div class="fg"><label>Tienda</label><select id="p-t" onchange="applyProv()"><option value="">Todas</option></select></div>
+    <div class="fg"><label>Proveedor</label><select id="p-p" onchange="applyProv()"><option value="">Todos</option></select></div>
+    <div class="fg"><label>Estado OC</label>
+      <select id="p-s" onchange="applyProv()"><option value="">Todos</option><option>DELIVERED</option><option>PARTIAL_DELIVERY</option><option>AT_STORE</option><option>CLOSED_FULL_DELIVERY</option><option>CLOSED_PARTIAL_DELIVERY</option></select>
+    </div>
+    <div class="fg"><label>Cantidad</label>
+      <select id="p-fc" onchange="applyProv()"><option value="">Todos</option><option>FALTANTE</option><option>SOBRANTE</option><option>OK</option></select>
+    </div>
+    <div class="fg"><label>Horario</label>
+      <select id="p-h" onchange="applyProv()"><option value="">Todos</option><option value="FUERA">Fuera</option><option value="EN">En horario</option></select>
+    </div>
+    <div class="fg"><label>Reedición</label>
+      <select id="p-edit" onchange="applyProv()"><option value="">Todos</option><option value="SI">Con reedición</option><option value="NO">Sin reedición</option></select>
+    </div>
+    <div class="fg"><label>Buscar</label><input class="fi" style="width:150px" type="text" id="p-q" placeholder="OC / Tienda / Proveedor…" oninput="applyProv()"></div>
+    <button class="btn" onclick="clearProv()">✕ Limpiar</button>
+    <button class="btn" onclick="exportCSV(filMain,'recepciones_oc')">↓ CSV OC</button>
+    <button class="btn" onclick="exportCSV(filDetail,'recepciones_detalle')">↓ CSV Detalle</button>
+    <span class="fcount" id="p-fcount"></span>
   </div>
-  <div class="fg"><label>Tiempo</label>
-    <select id="f-ft" onchange="applyFilters()"><option value="">Todos</option><option value="> 60 MIN">> 60 MIN</option><option>OK</option></select>
+
+  <div class="section-header">
+    <span class="section-title">📋 Recepciones por OC</span>
+    <span class="section-count" id="cnt-main"></span>
   </div>
-  <div class="fg"><label>Horario</label>
-    <select id="f-h" onchange="applyFilters()"><option value="">Todos</option><option value="FUERA">Fuera</option><option value="EN">En horario</option></select>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th data-col="STATUS_PO" data-tbl="main">Estado OC</th>
+        <th data-col="FILLRATE_PCT" data-tbl="main">Fillrate</th>
+        <th data-col="NOMBRE_TIENDA" data-tbl="main">Tienda</th>
+        <th data-col="ID_TIENDA" data-tbl="main">ID</th>
+        <th data-col="PROVEEDOR" data-tbl="main">Proveedor</th>
+        <th data-col="RESPONSABLE_RECEPCION" data-tbl="main">Responsable</th>
+        <th data-col="NRO_OC" data-tbl="main">Nro OC</th>
+        <th data-col="INICIO_RECEPCION" data-tbl="main">Inicio</th>
+        <th data-col="PRIMER_CIERRE" data-tbl="main">Primer Cierre</th>
+        <th data-col="EDICION_2" data-tbl="main">Reedición</th>
+        <th data-col="TOTAL_MIN_RECEPCION" data-tbl="main">Min</th>
+        <th data-col="QTY_SOLICITADA" data-tbl="main">Qty Sol.</th>
+        <th data-col="QTY_RECIBIDA" data-tbl="main">Qty Rec.</th>
+        <th data-col="FUERA_DE_HORARIO" data-tbl="main">Horario</th>
+        <th data-col="FLAG_CANTIDAD" data-tbl="main">Flag Cant.</th>
+        <th data-col="FLAG_TIEMPO" data-tbl="main">Flag T.</th>
+        <th data-col="NUMERO_FACTURA" data-tbl="main">Nro Factura</th>
+        <th>Factura</th>
+      </tr></thead>
+      <tbody id="tbody-main"><tr><td colspan="18"><div class="state"><div class="spin"></div></div></td></tr></tbody>
+    </table>
   </div>
-  <div class="fg"><label>Reedición</label>
-    <select id="f-edit" onchange="applyFilters()"><option value="">Todos</option><option value="SI">Con reedición</option><option value="NO">Sin reedición</option></select>
+  <div class="pager"><span class="pinfo" id="pinfo-main"></span><div class="pbtns" id="pbtns-main"></div></div>
+
+  <div class="section-header" style="margin-top:12px">
+    <span class="section-title">🔍 Detalle por Producto</span>
+    <span class="section-count" id="cnt-detail"></span>
   </div>
-  <div class="fg"><label>Buscar</label><input class="fi" style="width:160px" type="text" id="f-q" placeholder="OC / Tienda / Proveedor…" oninput="applyFilters()"></div>
-  <button class="btn" onclick="clearF()">✕ Limpiar</button>
-  <button class="btn" onclick="exportCSV('main')">↓ CSV OC</button>
-  <button class="btn" onclick="exportCSV('detail')">↓ CSV Detalle</button>
-  <span class="fcount" id="fcount"></span>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th data-col="FILLRATE_PCT" data-tbl="detail">Fillrate</th>
+        <th data-col="NOMBRE_TIENDA" data-tbl="detail">Tienda</th>
+        <th data-col="PROVEEDOR" data-tbl="detail">Proveedor</th>
+        <th data-col="NRO_OC" data-tbl="detail">Nro OC</th>
+        <th data-col="PRODUCTO" data-tbl="detail">Producto</th>
+        <th data-col="EAN" data-tbl="detail">EAN</th>
+        <th data-col="QTY_SOLICITADA" data-tbl="detail">Qty Sol.</th>
+        <th data-col="QTY_RECIBIDA" data-tbl="detail">Qty Rec.</th>
+      </tr></thead>
+      <tbody id="tbody-detail"><tr><td colspan="8"><div class="state"><div class="spin"></div></div></td></tr></tbody>
+    </table>
+  </div>
+  <div class="pager" style="margin-bottom:24px"><span class="pinfo" id="pinfo-detail"></span><div class="pbtns" id="pbtns-detail"></div></div>
 </div>
 
-<!-- TABLA 1: RECEPCIONES POR OC -->
-<div class="section-header">
-  <span class="section-title">📋 Recepciones por OC</span>
-  <span class="section-count" id="cnt-main"></span>
-</div>
-<div class="table-wrap">
-  <table>
-    <thead><tr>
-      <th data-col="STATUS_PO" data-tbl="main">Estado OC</th>
-      <th data-col="FILLRATE_PCT" data-tbl="main">Fillrate</th>
-      <th data-col="NOMBRE_TIENDA" data-tbl="main">Tienda</th>
-      <th data-col="ID_TIENDA" data-tbl="main">ID</th>
-      <th data-col="PROVEEDOR" data-tbl="main">Proveedor</th>
-      <th data-col="RESPONSABLE_RECEPCION" data-tbl="main">Responsable</th>
-      <th data-col="NRO_OC" data-tbl="main">Nro OC</th>
-      <th data-col="INICIO_RECEPCION" data-tbl="main">Inicio</th>
-      <th data-col="PRIMER_CIERRE" data-tbl="main">Primer Cierre</th>
-      <th data-col="EDICION_2" data-tbl="main">Reedición</th>
-      <th data-col="TOTAL_MIN_RECEPCION" data-tbl="main">Min</th>
-      <th data-col="QTY_SOLICITADA" data-tbl="main">Qty Sol.</th>
-      <th data-col="QTY_RECIBIDA" data-tbl="main">Qty Rec.</th>
-      <th data-col="FUERA_DE_HORARIO" data-tbl="main">Horario</th>
-      <th data-col="FLAG_CANTIDAD" data-tbl="main">Flag Cant.</th>
-      <th data-col="FLAG_TIEMPO" data-tbl="main">Flag T.</th>
-      <th data-col="NUMERO_FACTURA" data-tbl="main">Factura Nro</th>
-      <th>Factura</th>
-    </tr></thead>
-    <tbody id="tbody-main">
-      <tr><td colspan="18"><div class="state"><div class="spin"></div><p>Cargando…</p></div></td></tr>
-    </tbody>
-  </table>
-</div>
-<div class="pager"><span class="pinfo" id="pinfo-main"></span><div class="pbtns" id="pbtns-main"></div></div>
+<!-- ===================== PESTAÑA TRANSFERENCIAS ===================== -->
+<div id="tab-transferencias" class="tab-content">
+  <div class="kpi-row cols4">
+    <div class="kpi"><div class="kpi-label">Total Transferencias</div><div class="kpi-value ca" id="t-total">—</div><div class="kpi-sub">transferencias</div></div>
+    <div class="kpi"><div class="kpi-label">Completadas</div><div class="kpi-value cg" id="t-comp">—</div><div class="kpi-sub">COMPLETED / DELIVERED</div></div>
+    <div class="kpi"><div class="kpi-label">En Progreso</div><div class="kpi-value cy" id="t-prog">—</div><div class="kpi-sub">IN_PROGRESS / PICKING</div></div>
+    <div class="kpi"><div class="kpi-label">Canceladas</div><div class="kpi-value cr" id="t-canc">—</div><div class="kpi-sub">CANCELLED / FAILED</div></div>
+  </div>
+  <div class="filters">
+    <div class="fg"><label>Desde</label><input type="date" id="t-desde" class="fi" onchange="applyTrans()"></div>
+    <div class="fg"><label>Hasta</label><input type="date" id="t-hasta" class="fi" onchange="applyTrans()"></div>
+    <div class="fg"><label>Origen</label><select id="t-org" onchange="applyTrans()"><option value="">Todos</option></select></div>
+    <div class="fg"><label>Destino</label><select id="t-dst" onchange="applyTrans()"><option value="">Todos</option></select></div>
+    <div class="fg"><label>Estado</label><select id="t-st" onchange="applyTrans()"><option value="">Todos</option></select></div>
+    <div class="fg"><label>Buscar</label><input class="fi" style="width:150px" type="text" id="t-q" placeholder="TR ID / Producto / EAN…" oninput="applyTrans()"></div>
+    <button class="btn" onclick="clearTrans()">✕ Limpiar</button>
+    <button class="btn" onclick="exportCSV(filTrans,'transferencias')">↓ CSV</button>
+    <span class="fcount" id="t-fcount"></span>
+  </div>
 
-<!-- TABLA 2: DETALLE POR PRODUCTO -->
-<div class="section-header" style="margin-top:16px">
-  <span class="section-title">🔍 Detalle por Producto</span>
-  <span class="section-count" id="cnt-detail"></span>
+  <div class="section-header">
+    <span class="section-title">🔄 Transferencias</span>
+    <span class="section-count" id="cnt-trans"></span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th data-col="STATUS_VISUAL" data-tbl="trans">Estado</th>
+        <th data-col="ORIGEN_WAREHOUSE" data-tbl="trans">Origen</th>
+        <th data-col="DESTINO_WAREHOUSE" data-tbl="trans">Destino</th>
+        <th data-col="TR_ID" data-tbl="trans">TR ID</th>
+        <th data-col="TRANSFER_CODE" data-tbl="trans">Código</th>
+        <th data-col="CREATED_AT" data-tbl="trans">Creado</th>
+        <th data-col="EXECUTE_AT" data-tbl="trans">Ejecutar</th>
+        <th data-col="UPDATED_AT" data-tbl="trans">Actualizado</th>
+        <th data-col="FIRST_DELIVERY" data-tbl="trans">1er Entrega</th>
+        <th data-col="PRODUCTO" data-tbl="trans">Producto</th>
+        <th data-col="EAN" data-tbl="trans">EAN</th>
+        <th data-col="REQUESTED" data-tbl="trans">Solicitado</th>
+        <th data-col="PICKED" data-tbl="trans">Picked</th>
+        <th data-col="DELIVERED" data-tbl="trans">Entregado</th>
+        <th data-col="MISSING" data-tbl="trans">Faltante</th>
+        <th data-col="DAMAGED" data-tbl="trans">Dañado</th>
+        <th data-col="FILLRATE_PCT" data-tbl="trans">Fillrate</th>
+      </tr></thead>
+      <tbody id="tbody-trans"><tr><td colspan="17"><div class="state"><div class="spin"></div></div></td></tr></tbody>
+    </table>
+  </div>
+  <div class="pager" style="margin-bottom:24px"><span class="pinfo" id="pinfo-trans"></span><div class="pbtns" id="pbtns-trans"></div></div>
 </div>
-<div class="table-wrap">
-  <table>
-    <thead><tr>
-      <th data-col="FILLRATE_PCT" data-tbl="detail">Fillrate</th>
-      <th data-col="NOMBRE_TIENDA" data-tbl="detail">Tienda</th>
-      <th data-col="PROVEEDOR" data-tbl="detail">Proveedor</th>
-      <th data-col="NRO_OC" data-tbl="detail">Nro OC</th>
-      <th data-col="PRODUCTO" data-tbl="detail">Producto</th>
-      <th data-col="EAN" data-tbl="detail">EAN</th>
-      <th data-col="QTY_SOLICITADA" data-tbl="detail">Qty Sol.</th>
-      <th data-col="QTY_RECIBIDA" data-tbl="detail">Qty Rec.</th>
-    </tr></thead>
-    <tbody id="tbody-detail">
-      <tr><td colspan="8"><div class="state"><div class="spin"></div><p>Cargando…</p></div></td></tr>
-    </tbody>
-  </table>
-</div>
-<div class="pager" style="margin-bottom:24px"><span class="pinfo" id="pinfo-detail"></span><div class="pbtns" id="pbtns-detail"></div></div>
 
 <script>
+// URLs CSV
 var CSV_MAIN   = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=540661722&single=true&output=csv';
 var CSV_DETAIL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=771599306&single=true&output=csv';
+var CSV_TRANS  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=1535683360&single=true&output=csv';
 
-var PAGE = 100;
-var allMain=[], allDetail=[];
-var filMain=[], filDetail=[];
-var pgMain=1, pgDetail=1;
-var sColMain='INICIO_RECEPCION', sDirMain=-1;
-var sColDetail='NRO_OC', sDirDetail=-1;
+var PAGE=100;
+var allMain=[],allDetail=[],allTrans=[];
+var filMain=[],filDetail=[],filTrans=[];
+var pgMain=1,pgDetail=1,pgTrans=1;
+var sCol={main:'INICIO_RECEPCION',detail:'NRO_OC',trans:'CREATED_AT'};
+var sDir={main:-1,detail:-1,trans:-1};
+
+// Tab switch
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+  document.querySelector('.tab[onclick="showTab(\''+name+'\')"]').classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
 
 // Sort headers
-document.querySelectorAll('th[data-col]').forEach(function(th) {
-  th.addEventListener('click', function() {
-    if (th.dataset.tbl === 'main') sortBy('main', th.dataset.col);
-    else sortBy('detail', th.dataset.col);
+document.querySelectorAll('th[data-col]').forEach(function(th){
+  th.addEventListener('click',function(){
+    var tbl=th.dataset.tbl;
+    if(sCol[tbl]===th.dataset.col) sDir[tbl]*=-1; else{sCol[tbl]=th.dataset.col;sDir[tbl]=-1;}
+    document.querySelectorAll('th[data-tbl="'+tbl+'"]').forEach(function(h){h.classList.remove('asc','desc');});
+    th.classList.add(sDir[tbl]===1?'asc':'desc');
+    if(tbl==='trans') applyTrans(); else applyProv();
   });
 });
 
 function reloadAll() {
   setStatus('y','Cargando…');
-  var p1 = loadCSV(CSV_MAIN).then(function(data){ allMain = data; });
-  var p2 = loadCSV(CSV_DETAIL).then(function(data){ allDetail = data; });
-  Promise.all([p1,p2]).then(function(){
-    buildFilters();
-    applyFilters();
-    var t = new Date().toLocaleString('es-CL',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
-    setStatus('g','Actualizado ' + t);
-  }).catch(function(e){
-    setStatus('r','Error: ' + e.message);
-  });
+  Promise.all([
+    loadCSV(CSV_MAIN).then(function(d){allMain=d;}),
+    loadCSV(CSV_DETAIL).then(function(d){allDetail=d;}),
+    loadCSV(CSV_TRANS).then(function(d){allTrans=d;})
+  ]).then(function(){
+    buildProvFilters();
+    buildTransFilters();
+    applyProv();
+    applyTrans();
+    var t=new Date().toLocaleString('es-CL',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+    setStatus('g','Actualizado '+t);
+  }).catch(function(e){setStatus('r','Error: '+e.message);});
 }
 
-function loadCSV(url) {
-  return fetch(url, {cache:'no-store', mode:'cors'})
-    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); })
+function loadCSV(url){
+  return fetch(url,{cache:'no-store',mode:'cors'})
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
     .then(function(text){
-      if (!text || text.trim().startsWith('<')) throw new Error('CSV inválido');
+      if(!text||text.trim().startsWith('<')) throw new Error('CSV inválido');
       return parseCSV(text);
     });
 }
 
-function setStatus(c, msg) {
-  document.getElementById('status').innerHTML = '<span class="dot '+c+'"></span>'+msg;
-}
+function setStatus(c,msg){document.getElementById('status').innerHTML='<span class="dot '+c+'"></span>'+msg;}
 
-function parseCSV(text) {
-  var lines = text.replace(/\r/g,'').split('\n').filter(function(l){ return l.trim(); });
-  function splitLine(line) {
-    var r=[], c='', inQ=false;
-    for (var i=0; i<line.length; i++) {
-      var ch=line[i]; if(ch==='"'){inQ=!inQ;} else if(ch===','&&!inQ){r.push(c);c='';} else c+=ch;
-    } r.push(c); return r;
+function parseCSV(text){
+  var lines=text.replace(/\r/g,'').split('\n').filter(function(l){return l.trim();});
+  function splitLine(line){
+    var r=[],c='',inQ=false;
+    for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){inQ=!inQ;}else if(ch===','&&!inQ){r.push(c);c='';}else c+=ch;}
+    r.push(c);return r;
   }
   var hIdx=0;
-  for (var i=0; i<Math.min(lines.length,25); i++) {
+  for(var i=0;i<Math.min(lines.length,25);i++){
     var cells=splitLine(lines[i]).map(function(h){return h.replace(/^"|"$/g,'').trim();});
-    if (cells.length>2 && cells[0]==='' && (cells[1].toUpperCase()==='NOMBRE_TIENDA'||cells[1].toUpperCase()==='FILLRATE_PCT')) { hIdx=i; break; }
+    if(cells.length>2&&cells[0]===''&&cells[1]!==''){hIdx=i;break;}
   }
   var rawH=splitLine(lines[hIdx]).map(function(h){return h.replace(/^"|"$/g,'').trim();});
-  var offset=0; while(offset<rawH.length&&rawH[offset]==='') offset++;
+  var offset=0;while(offset<rawH.length&&rawH[offset]==='')offset++;
   var headers=rawH.slice(offset);
   var rows=[];
-  for (var j=hIdx+1; j<lines.length; j++) {
+  for(var j=hIdx+1;j<lines.length;j++){
     var vals=splitLine(lines[j]).map(function(v){return v.replace(/^"|"$/g,'').trim();}).slice(offset);
-    if (vals.every(function(v){return !v;})) continue;
-    var obj={}; headers.forEach(function(h,k){obj[h]=vals[k]||'';});
-    if (obj['NOMBRE_TIENDA']||obj['NRO_OC']||obj['PRODUCTO']) rows.push(obj);
+    if(vals.every(function(v){return !v;}))continue;
+    var obj={};headers.forEach(function(h,k){obj[h]=vals[k]||'';});
+    rows.push(obj);
   }
   return rows;
 }
 
-function buildFilters() {
-  var desdeEl=document.getElementById('f-desde');
-  var hastaEl=document.getElementById('f-hasta');
-  if (!desdeEl.value) { var d=new Date(); d.setDate(d.getDate()-29); desdeEl.value=d.toISOString().slice(0,10); }
-  if (!hastaEl.value) { hastaEl.value=new Date().toISOString().slice(0,10); }
-  function uniq(arr,k){return [...new Set(arr.map(function(r){return r[k];}).filter(Boolean))].sort();}
-  function opt(arr){return arr.map(function(v){return '<option value="'+v+'">'+v+'</option>';}).join('');}
-  // Combinar tiendas y proveedores de ambas tablas
-  var tiendas = [...new Set([...uniq(allMain,'NOMBRE_TIENDA'),...uniq(allDetail,'NOMBRE_TIENDA')])].sort();
-  var provs   = [...new Set([...uniq(allMain,'PROVEEDOR'),...uniq(allDetail,'PROVEEDOR')])].sort();
-  document.getElementById('f-t').innerHTML='<option value="">Todas</option>'+opt(tiendas);
-  document.getElementById('f-p').innerHTML='<option value="">Todos</option>'+opt(provs);
+// ---- PROVEEDORES ----
+function buildProvFilters(){
+  var d=new Date();d.setDate(d.getDate()-29);
+  if(!document.getElementById('p-desde').value) document.getElementById('p-desde').value=d.toISOString().slice(0,10);
+  if(!document.getElementById('p-hasta').value) document.getElementById('p-hasta').value=new Date().toISOString().slice(0,10);
+  function uniq(arr,k){return[...new Set(arr.map(function(r){return r[k];}).filter(Boolean))].sort();}
+  function opt(arr){return arr.map(function(v){return'<option value="'+v+'">'+v+'</option>';}).join('');}
+  var tiendas=[...new Set([...uniq(allMain,'NOMBRE_TIENDA'),...uniq(allDetail,'NOMBRE_TIENDA')])].sort();
+  var provs=[...new Set([...uniq(allMain,'PROVEEDOR'),...uniq(allDetail,'PROVEEDOR')])].sort();
+  document.getElementById('p-t').innerHTML='<option value="">Todas</option>'+opt(tiendas);
+  document.getElementById('p-p').innerHTML='<option value="">Todos</option>'+opt(provs);
 }
 
-function applyFilters() {
-  var desde=document.getElementById('f-desde').value;
-  var hasta=document.getElementById('f-hasta').value;
-  var t=document.getElementById('f-t').value;
-  var p=document.getElementById('f-p').value;
-  var s=document.getElementById('f-s').value;
-  var fc=document.getElementById('f-fc').value;
-  var ft=document.getElementById('f-ft').value;
-  var h=document.getElementById('f-h').value;
-  var edit=document.getElementById('f-edit').value;
-  var q=document.getElementById('f-q').value.toLowerCase();
+function applyProv(){
+  var desde=document.getElementById('p-desde').value;
+  var hasta=document.getElementById('p-hasta').value;
+  var t=document.getElementById('p-t').value;
+  var p=document.getElementById('p-p').value;
+  var s=document.getElementById('p-s').value;
+  var fc=document.getElementById('p-fc').value;
+  var h=document.getElementById('p-h').value;
+  var edit=document.getElementById('p-edit').value;
+  var q=document.getElementById('p-q').value.toLowerCase();
 
-  // Filtrar tabla principal
   filMain=allMain.filter(function(r){
     var fecha=(r.INICIO_RECEPCION||r.PRIMER_CIERRE||'').slice(0,10);
-    if(desde&&fecha<desde) return false;
-    if(hasta&&fecha>hasta) return false;
-    if(t&&r.NOMBRE_TIENDA!==t) return false;
-    if(p&&r.PROVEEDOR!==p) return false;
-    if(s&&r.STATUS_PO!==s) return false;
-    if(fc&&r.FLAG_CANTIDAD!==fc) return false;
-    if(ft&&r.FLAG_TIEMPO!==ft) return false;
-    if(h==='FUERA'&&String(r.FUERA_DE_HORARIO).indexOf('FUERA')===-1) return false;
-    if(h==='EN'&&String(r.FUERA_DE_HORARIO).indexOf('EN HORARIO')===-1) return false;
-    if(edit==='SI'&&(!r.EDICION_2||!r.EDICION_2.trim())) return false;
-    if(edit==='NO'&&r.EDICION_2&&r.EDICION_2.trim()) return false;
-    if(q&&[r.NRO_OC,r.RESPONSABLE_RECEPCION,r.PROVEEDOR,r.NOMBRE_TIENDA].every(function(v){return String(v).toLowerCase().indexOf(q)===-1;})) return false;
+    if(desde&&fecha<desde)return false;
+    if(hasta&&fecha>hasta)return false;
+    if(t&&r.NOMBRE_TIENDA!==t)return false;
+    if(p&&r.PROVEEDOR!==p)return false;
+    if(s&&r.STATUS_PO!==s)return false;
+    if(fc&&r.FLAG_CANTIDAD!==fc)return false;
+    if(h==='FUERA'&&String(r.FUERA_DE_HORARIO).indexOf('FUERA')===-1)return false;
+    if(h==='EN'&&String(r.FUERA_DE_HORARIO).indexOf('EN HORARIO')===-1)return false;
+    if(edit==='SI'&&(!r.EDICION_2||!r.EDICION_2.trim()))return false;
+    if(edit==='NO'&&r.EDICION_2&&r.EDICION_2.trim())return false;
+    if(q&&[r.NRO_OC,r.RESPONSABLE_RECEPCION,r.PROVEEDOR,r.NOMBRE_TIENDA].every(function(v){return String(v).toLowerCase().indexOf(q)===-1;}))return false;
     return true;
   });
 
-  // Obtener OCs filtradas para sincronizar detalle
-  var ocsFiltered = new Set(filMain.map(function(r){return r.NRO_OC;}));
-
-  // Filtrar detalle usando los mismos filtros de tienda/proveedor/OC
+  var ocs=new Set(filMain.map(function(r){return r.NRO_OC;}));
   filDetail=allDetail.filter(function(r){
-    // Si hay OCs filtradas en tabla principal, el detalle debe coincidir
-    if(ocsFiltered.size>0 && !ocsFiltered.has(r.NRO_OC)) return false;
-    if(t&&r.NOMBRE_TIENDA!==t) return false;
-    if(p&&r.PROVEEDOR!==p) return false;
-    if(q&&[r.NRO_OC,r.PROVEEDOR,r.NOMBRE_TIENDA,r.PRODUCTO,r.EAN].every(function(v){return String(v).toLowerCase().indexOf(q)===-1;})) return false;
+    if(ocs.size>0&&!ocs.has(r.NRO_OC))return false;
+    if(t&&r.NOMBRE_TIENDA!==t)return false;
+    if(p&&r.PROVEEDOR!==p)return false;
+    if(q&&[r.NRO_OC,r.PROVEEDOR,r.NOMBRE_TIENDA,r.PRODUCTO,r.EAN].every(function(v){return String(v).toLowerCase().indexOf(q)===-1;}))return false;
     return true;
   });
 
   // Sort
-  filMain.sort(function(a,b){
-    var va=a[sColMain]||'',vb=b[sColMain]||'';
-    var na=parseFloat(va),nb=parseFloat(vb);
-    if(!isNaN(na)&&!isNaN(nb)) return sDirMain*(na-nb);
-    return sDirMain*String(va).localeCompare(String(vb));
-  });
-  filDetail.sort(function(a,b){
-    var va=a[sColDetail]||'',vb=b[sColDetail]||'';
-    var na=parseFloat(va),nb=parseFloat(vb);
-    if(!isNaN(na)&&!isNaN(nb)) return sDirDetail*(na-nb);
-    return sDirDetail*String(va).localeCompare(String(vb));
-  });
+  filMain.sort(function(a,b){var va=a[sCol.main]||'',vb=b[sCol.main]||'';var na=parseFloat(va),nb=parseFloat(vb);if(!isNaN(na)&&!isNaN(nb))return sDir.main*(na-nb);return sDir.main*String(va).localeCompare(String(vb));});
+  filDetail.sort(function(a,b){var va=a[sCol.detail]||'',vb=b[sCol.detail]||'';var na=parseFloat(va),nb=parseFloat(vb);if(!isNaN(na)&&!isNaN(nb))return sDir.detail*(na-nb);return sDir.detail*String(va).localeCompare(String(vb));});
 
-  updateKPIs();
-  pgMain=1; pgDetail=1;
-  renderMain(); renderDetail();
-  document.getElementById('fcount').textContent = filMain.length.toLocaleString('es-CL')+' OC · '+filDetail.length.toLocaleString('es-CL')+' productos';
+  updateKPIsProv();
+  pgMain=1;pgDetail=1;
+  renderMain();renderDetail();
+  document.getElementById('p-fcount').textContent=filMain.length.toLocaleString('es-CL')+' OC · '+filDetail.length.toLocaleString('es-CL')+' productos';
 }
 
-function updateKPIs() {
+function updateKPIsProv(){
   var fills=filMain.map(function(r){return parseFloat(r.FILLRATE_PCT);}).filter(function(n){return !isNaN(n);});
   document.getElementById('k-total').textContent=filMain.length.toLocaleString('es-CL');
   document.getElementById('k-fill').textContent=fills.length?(fills.reduce(function(a,b){return a+b;},0)/fills.length).toFixed(1)+'%':'—';
@@ -358,74 +410,110 @@ function updateKPIs() {
   document.getElementById('k-edit').textContent=filMain.filter(function(r){return r.EDICION_2&&r.EDICION_2.trim();}).length;
 }
 
-function renderMain() {
-  var start=(pgMain-1)*PAGE, slice=filMain.slice(start,start+PAGE);
-  var tbody=document.getElementById('tbody-main');
+function frHtml(fill){
+  var fc=fill>=100?'var(--green)':fill>=85?'var(--yellow)':'var(--red)';
+  return'<div class="fr"><div class="fr-bg"><div class="fr-bar" style="width:'+Math.min(fill,100)+'%;background:'+fc+'"></div></div><span class="fr-num" style="color:'+fc+'">'+fill+'%</span></div>';
+}
+
+function renderMain(){
+  var slice=filMain.slice((pgMain-1)*PAGE,pgMain*PAGE);
+  var tb=document.getElementById('tbody-main');
   document.getElementById('cnt-main').textContent=filMain.length.toLocaleString('es-CL')+' recepciones';
-  if(!slice.length){tbody.innerHTML='<tr><td colspan="18"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>';renderPager('main');return;}
-  tbody.innerHTML=slice.map(function(r){
+  if(!slice.length){tb.innerHTML='<tr><td colspan="18"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>';renderPager('main');return;}
+  tb.innerHTML=slice.map(function(r){
     var fill=parseFloat(r.FILLRATE_PCT);
-    var fc=fill>=100?'var(--green)':fill>=85?'var(--yellow)':'var(--red)';
-    var frHtml=!isNaN(fill)?'<div class="fr"><div class="fr-bg"><div class="fr-bar" style="width:'+Math.min(fill,100)+'%;background:'+fc+'"></div></div><span class="fr-num" style="color:'+fc+'">'+fill+'%</span></div>':'—';
     var sv=(r.STATUS_PO||'').toUpperCase();
     var sBadge=sv.indexOf('CLOSED_FULL')>-1||sv==='DELIVERED'?'<span class="badge b-full">'+r.STATUS_PO+'</span>':sv.indexOf('PARTIAL')>-1?'<span class="badge b-partial">'+r.STATUS_PO+'</span>':sv==='AT_STORE'?'<span class="badge b-atstore">'+r.STATUS_PO+'</span>':'<span class="badge b-other">'+(r.STATUS_PO||'—')+'</span>';
     var cBadge=r.FLAG_CANTIDAD==='FALTANTE'?'<span class="badge b-falt">FALTANTE</span>':r.FLAG_CANTIDAD==='SOBRANTE'?'<span class="badge b-sobr">SOBRANTE</span>':r.FLAG_CANTIDAD==='OK'?'<span class="badge b-ok">OK</span>':'—';
     var tBadge=r.FLAG_TIEMPO==='> 60 MIN'?'<span class="badge b-60">> 60 MIN</span>':r.FLAG_TIEMPO==='OK'?'<span class="badge b-ok">OK</span>':'—';
     var hBadge=String(r.FUERA_DE_HORARIO).indexOf('FUERA')>-1?'<span class="badge b-fuera">'+r.FUERA_DE_HORARIO+'</span>':'<span class="badge b-enhorario">✔ EN HORARIO</span>';
     var editCell=r.EDICION_2&&r.EDICION_2.trim()?'<span class="badge b-edit">✏ '+r.EDICION_2+'</span>':'—';
-    var fLink=r.FACTURA_URL?'<a class="flink" href="'+r.FACTURA_URL+'" target="_blank">📄 Ver</a>':'—';
-    return '<tr>'+
-      '<td>'+sBadge+'</td>'+
-      '<td>'+frHtml+'</td>'+
-      '<td style="max-width:150px;overflow:hidden;text-overflow:ellipsis" title="'+r.NOMBRE_TIENDA+'">'+(r.NOMBRE_TIENDA||'—')+'</td>'+
-      '<td style="color:var(--muted);font-size:11px">'+(r.ID_TIENDA||'—')+'</td>'+
-      '<td style="max-width:130px;overflow:hidden;text-overflow:ellipsis">'+(r.PROVEEDOR||'—')+'</td>'+
-      '<td>'+(r.RESPONSABLE_RECEPCION||'—')+'</td>'+
-      '<td style="font-family:monospace;font-size:12px">'+(r.NRO_OC||'—')+'</td>'+
-      '<td style="color:var(--muted);font-size:12px">'+(r.INICIO_RECEPCION||'—')+'</td>'+
-      '<td style="color:var(--green);font-size:12px;font-weight:600">'+(r.PRIMER_CIERRE||'—')+'</td>'+
-      '<td>'+editCell+'</td>'+
-      '<td style="text-align:right">'+(r.TOTAL_MIN_RECEPCION||'—')+'</td>'+
-      '<td style="text-align:right">'+(r.QTY_SOLICITADA||'—')+'</td>'+
-      '<td style="text-align:right">'+(r.QTY_RECIBIDA||'—')+'</td>'+
-      '<td>'+hBadge+'</td>'+
-      '<td>'+cBadge+'</td>'+
-      '<td>'+tBadge+'</td>'+
-      '<td style="font-family:monospace;font-size:11px">'+(r.NUMERO_FACTURA||'—')+'</td>'+
-      '<td>'+fLink+'</td>'+
-    '</tr>';
+    return'<tr><td>'+sBadge+'</td><td>'+(!isNaN(fill)?frHtml(fill):'—')+'</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis">'+(r.NOMBRE_TIENDA||'—')+'</td><td style="color:var(--muted);font-size:11px">'+(r.ID_TIENDA||'—')+'</td><td style="max-width:130px;overflow:hidden;text-overflow:ellipsis">'+(r.PROVEEDOR||'—')+'</td><td>'+(r.RESPONSABLE_RECEPCION||'—')+'</td><td style="font-family:monospace;font-size:12px">'+(r.NRO_OC||'—')+'</td><td style="color:var(--muted);font-size:12px">'+(r.INICIO_RECEPCION||'—')+'</td><td style="color:var(--green);font-size:12px;font-weight:600">'+(r.PRIMER_CIERRE||'—')+'</td><td>'+editCell+'</td><td style="text-align:right">'+(r.TOTAL_MIN_RECEPCION||'—')+'</td><td style="text-align:right">'+(r.QTY_SOLICITADA||'—')+'</td><td style="text-align:right">'+(r.QTY_RECIBIDA||'—')+'</td><td>'+hBadge+'</td><td>'+cBadge+'</td><td>'+tBadge+'</td><td style="font-family:monospace;font-size:11px">'+(r.NUMERO_FACTURA||'—')+'</td><td>'+(r.FACTURA_URL?'<a class="flink" href="'+r.FACTURA_URL+'" target="_blank">📄 Ver</a>':'—')+'</td></tr>';
   }).join('');
   renderPager('main');
 }
 
-function renderDetail() {
-  var start=(pgDetail-1)*PAGE, slice=filDetail.slice(start,start+PAGE);
-  var tbody=document.getElementById('tbody-detail');
+function renderDetail(){
+  var slice=filDetail.slice((pgDetail-1)*PAGE,pgDetail*PAGE);
+  var tb=document.getElementById('tbody-detail');
   document.getElementById('cnt-detail').textContent=filDetail.length.toLocaleString('es-CL')+' productos';
-  if(!slice.length){tbody.innerHTML='<tr><td colspan="8"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>';renderPager('detail');return;}
-  tbody.innerHTML=slice.map(function(r){
+  if(!slice.length){tb.innerHTML='<tr><td colspan="8"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>';renderPager('detail');return;}
+  tb.innerHTML=slice.map(function(r){
     var fill=parseFloat(r.FILLRATE_PCT);
-    var fc=fill>=100?'var(--green)':fill>=85?'var(--yellow)':'var(--red)';
-    var frHtml=!isNaN(fill)?'<div class="fr"><div class="fr-bg"><div class="fr-bar" style="width:'+Math.min(fill,100)+'%;background:'+fc+'"></div></div><span class="fr-num" style="color:'+fc+'">'+fill+'%</span></div>':'—';
-    return '<tr>'+
-      '<td>'+frHtml+'</td>'+
-      '<td style="max-width:150px;overflow:hidden;text-overflow:ellipsis">'+(r.NOMBRE_TIENDA||'—')+'</td>'+
-      '<td style="max-width:120px;overflow:hidden;text-overflow:ellipsis">'+(r.PROVEEDOR||'—')+'</td>'+
-      '<td style="font-family:monospace;font-size:12px">'+(r.NRO_OC||'—')+'</td>'+
-      '<td style="max-width:250px;overflow:hidden;text-overflow:ellipsis" title="'+(r.PRODUCTO||'')+'">'+(r.PRODUCTO||'—')+'</td>'+
-      '<td style="font-family:monospace;font-size:11px">'+(r.EAN||'—')+'</td>'+
-      '<td style="text-align:right">'+(r.QTY_SOLICITADA||'—')+'</td>'+
-      '<td style="text-align:right">'+(r.QTY_RECIBIDA||'—')+'</td>'+
-    '</tr>';
+    return'<tr><td>'+(!isNaN(fill)?frHtml(fill):'—')+'</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis">'+(r.NOMBRE_TIENDA||'—')+'</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis">'+(r.PROVEEDOR||'—')+'</td><td style="font-family:monospace;font-size:12px">'+(r.NRO_OC||'—')+'</td><td style="max-width:250px;overflow:hidden;text-overflow:ellipsis" title="'+(r.PRODUCTO||'')+'">'+(r.PRODUCTO||'—')+'</td><td style="font-family:monospace;font-size:11px">'+(r.EAN||'—')+'</td><td style="text-align:right">'+(r.QTY_SOLICITADA||'—')+'</td><td style="text-align:right">'+(r.QTY_RECIBIDA||'—')+'</td></tr>';
   }).join('');
   renderPager('detail');
 }
 
-function renderPager(tbl) {
-  var fil=tbl==='main'?filMain:filDetail;
-  var pg=tbl==='main'?pgMain:pgDetail;
+// ---- TRANSFERENCIAS ----
+function buildTransFilters(){
+  var d=new Date();d.setDate(d.getDate()-29);
+  if(!document.getElementById('t-desde').value) document.getElementById('t-desde').value=d.toISOString().slice(0,10);
+  if(!document.getElementById('t-hasta').value) document.getElementById('t-hasta').value=new Date().toISOString().slice(0,10);
+  function uniq(k){return[...new Set(allTrans.map(function(r){return r[k];}).filter(Boolean))].sort();}
+  function opt(arr){return arr.map(function(v){return'<option value="'+v+'">'+v+'</option>';}).join('');}
+  document.getElementById('t-org').innerHTML='<option value="">Todos</option>'+opt(uniq('ORIGEN_WAREHOUSE'));
+  document.getElementById('t-dst').innerHTML='<option value="">Todos</option>'+opt(uniq('DESTINO_WAREHOUSE'));
+  document.getElementById('t-st').innerHTML='<option value="">Todos</option>'+opt(uniq('STATUS_NAME'));
+}
+
+function applyTrans(){
+  var desde=document.getElementById('t-desde').value;
+  var hasta=document.getElementById('t-hasta').value;
+  var org=document.getElementById('t-org').value;
+  var dst=document.getElementById('t-dst').value;
+  var st=document.getElementById('t-st').value;
+  var q=document.getElementById('t-q').value.toLowerCase();
+
+  filTrans=allTrans.filter(function(r){
+    var fecha=(r.CREATED_AT||'').slice(0,10);
+    if(desde&&fecha<desde)return false;
+    if(hasta&&fecha>hasta)return false;
+    if(org&&r.ORIGEN_WAREHOUSE!==org)return false;
+    if(dst&&r.DESTINO_WAREHOUSE!==dst)return false;
+    if(st&&r.STATUS_NAME!==st)return false;
+    if(q&&[r.TR_ID,r.TRANSFER_CODE,r.PRODUCTO,r.EAN,r.ORIGEN_WAREHOUSE,r.DESTINO_WAREHOUSE].every(function(v){return String(v).toLowerCase().indexOf(q)===-1;}))return false;
+    return true;
+  });
+
+  filTrans.sort(function(a,b){var va=a[sCol.trans]||'',vb=b[sCol.trans]||'';var na=parseFloat(va),nb=parseFloat(vb);if(!isNaN(na)&&!isNaN(nb))return sDir.trans*(na-nb);return sDir.trans*String(va).localeCompare(String(vb));});
+
+  updateKPIsTrans();
+  pgTrans=1;renderTrans();
+  document.getElementById('t-fcount').textContent=filTrans.length.toLocaleString('es-CL')+' registros';
+}
+
+function updateKPIsTrans(){
+  var ids=new Set(filTrans.map(function(r){return r.TR_ID;}));
+  document.getElementById('t-total').textContent=ids.size.toLocaleString('es-CL');
+  var comp=new Set(filTrans.filter(function(r){return['COMPLETED','DELIVERED','DONE'].indexOf((r.STATUS_NAME||'').toUpperCase())>-1;}).map(function(r){return r.TR_ID;}));
+  var prog=new Set(filTrans.filter(function(r){return['IN_PROGRESS','PROCESSING','PICKING'].indexOf((r.STATUS_NAME||'').toUpperCase())>-1;}).map(function(r){return r.TR_ID;}));
+  var canc=new Set(filTrans.filter(function(r){return['CANCELLED','CANCELED','FAILED'].indexOf((r.STATUS_NAME||'').toUpperCase())>-1;}).map(function(r){return r.TR_ID;}));
+  document.getElementById('t-comp').textContent=comp.size;
+  document.getElementById('t-prog').textContent=prog.size;
+  document.getElementById('t-canc').textContent=canc.size;
+}
+
+function renderTrans(){
+  var slice=filTrans.slice((pgTrans-1)*PAGE,pgTrans*PAGE);
+  var tb=document.getElementById('tbody-trans');
+  document.getElementById('cnt-trans').textContent=filTrans.length.toLocaleString('es-CL')+' registros';
+  if(!slice.length){tb.innerHTML='<tr><td colspan="17"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>';renderPager('trans');return;}
+  tb.innerHTML=slice.map(function(r){
+    var sv=(r.STATUS_NAME||'').toUpperCase();
+    var stBadge=sv==='COMPLETED'||sv==='DELIVERED'||sv==='DONE'?'<span class="badge b-full">✔ '+r.STATUS_NAME+'</span>':sv==='IN_PROGRESS'||sv==='PROCESSING'||sv==='PICKING'?'<span class="badge b-progress">⚠ '+r.STATUS_NAME+'</span>':sv==='CANCELLED'||sv==='CANCELED'||sv==='FAILED'?'<span class="badge b-cancel">✖ '+r.STATUS_NAME+'</span>':'<span class="badge b-created">'+(r.STATUS_NAME||'—')+'</span>';
+    var fill=parseFloat(r.FILLRATE_PCT);
+    return'<tr><td>'+stBadge+'</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis">'+(r.ORIGEN_WAREHOUSE||'—')+'</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis">'+(r.DESTINO_WAREHOUSE||'—')+'</td><td style="font-family:monospace">'+(r.TR_ID||'—')+'</td><td style="font-family:monospace">'+(r.TRANSFER_CODE||'—')+'</td><td style="color:var(--muted);font-size:12px">'+(r.CREATED_AT||'—')+'</td><td style="color:var(--muted);font-size:12px">'+(r.EXECUTE_AT||'—')+'</td><td style="color:var(--muted);font-size:12px">'+(r.UPDATED_AT||'—')+'</td><td style="color:var(--green);font-size:12px">'+(r.FIRST_DELIVERY||'—')+'</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis" title="'+(r.PRODUCTO||'')+'">'+(r.PRODUCTO||'—')+'</td><td style="font-family:monospace;font-size:11px">'+(r.EAN||'—')+'</td><td style="text-align:right">'+(r.REQUESTED||'—')+'</td><td style="text-align:right">'+(r.PICKED||'—')+'</td><td style="text-align:right">'+(r.DELIVERED||'—')+'</td><td style="text-align:right;color:'+(parseInt(r.MISSING)>0?'var(--yellow)':'inherit')+'">'+(r.MISSING||'0')+'</td><td style="text-align:right;color:'+(parseInt(r.DAMAGED)>0?'var(--red)':'inherit')+'">'+(r.DAMAGED||'0')+'</td><td>'+(!isNaN(fill)?frHtml(fill):'—')+'</td></tr>';
+  }).join('');
+  renderPager('trans');
+}
+
+// ---- PAGINACIÓN ----
+function renderPager(tbl){
+  var fil=tbl==='main'?filMain:tbl==='detail'?filDetail:filTrans;
+  var pg=tbl==='main'?pgMain:tbl==='detail'?pgDetail:pgTrans;
   var pages=Math.ceil(fil.length/PAGE);
-  var s=(pg-1)*PAGE+1, e=Math.min(pg*PAGE,fil.length);
+  var s=(pg-1)*PAGE+1,e=Math.min(pg*PAGE,fil.length);
   document.getElementById('pinfo-'+tbl).textContent=fil.length?'Mostrando '+s+'–'+e+' de '+fil.length.toLocaleString('es-CL'):'';
   var c=document.getElementById('pbtns-'+tbl);
   if(pages<=1){c.innerHTML='';return;}
@@ -439,41 +527,34 @@ function renderPager(tbl) {
 }
 
 function goP(tbl,p){
-  var fil=tbl==='main'?filMain:filDetail;
+  var fil=tbl==='main'?filMain:tbl==='detail'?filDetail:filTrans;
   var pages=Math.ceil(fil.length/PAGE);
-  if(p<1||p>pages) return;
-  if(tbl==='main') pgMain=p; else pgDetail=p;
-  if(tbl==='main') renderMain(); else renderDetail();
+  if(p<1||p>pages)return;
+  if(tbl==='main')pgMain=p;else if(tbl==='detail')pgDetail=p;else pgTrans=p;
+  if(tbl==='main')renderMain();else if(tbl==='detail')renderDetail();else renderTrans();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function sortBy(tbl,col){
-  if(tbl==='main'){
-    if(sColMain===col) sDirMain*=-1; else{sColMain=col;sDirMain=-1;}
-    document.querySelectorAll('th[data-tbl="main"]').forEach(function(th){th.classList.remove('asc','desc');if(th.dataset.col===col)th.classList.add(sDirMain===1?'asc':'desc');});
-  } else {
-    if(sColDetail===col) sDirDetail*=-1; else{sColDetail=col;sDirDetail=-1;}
-    document.querySelectorAll('th[data-tbl="detail"]').forEach(function(th){th.classList.remove('asc','desc');if(th.dataset.col===col)th.classList.add(sDirDetail===1?'asc':'desc');});
-  }
-  applyFilters();
+function clearProv(){
+  ['p-desde','p-hasta','p-t','p-p','p-s','p-fc','p-h','p-edit'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('p-q').value='';applyProv();
 }
 
-function clearF(){
-  ['f-desde','f-hasta','f-t','f-p','f-s','f-fc','f-ft','f-h','f-edit'].forEach(function(id){document.getElementById(id).value='';});
-  document.getElementById('f-q').value=''; applyFilters();
+function clearTrans(){
+  ['t-desde','t-hasta','t-org','t-dst','t-st'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('t-q').value='';applyTrans();
 }
 
-function exportCSV(tbl){
-  var data=tbl==='main'?filMain:filDetail;
-  if(!data.length) return;
+function exportCSV(data,name){
+  if(!data.length)return;
   var keys=Object.keys(data[0]);
-  var rows=[keys.join(',')].concat(data.map(function(r){return keys.map(function(k){return '"'+(r[k]||'').replace(/"/g,'""')+'"';}).join(',');}));
+  var rows=[keys.join(',')].concat(data.map(function(r){return keys.map(function(k){return'"'+(r[k]||'').replace(/"/g,'""')+'"';}).join(',');}));
   var a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'}));
-  a.download='recepciones_'+(tbl==='main'?'oc':'detalle')+'_'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
+  a.download=name+'_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
 }
 
-// Auto-cargar al abrir
+// Auto-cargar
 reloadAll();
 </script>
 </body>
