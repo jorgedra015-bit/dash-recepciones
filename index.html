@@ -323,10 +323,11 @@ function parseCSV(text){
     for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){inQ=!inQ;}else if(ch===','&&!inQ){r.push(c);c='';}else c+=ch;}
     r.push(c);return r;
   }
+  var KNOWN=['NOMBRE_TIENDA','FILLRATE_PCT','ORIGEN_WAREHOUSE','TR_ID','STATUS_NAME','NRO_OC','PRODUCTO'];
   var hIdx=0;
   for(var i=0;i<Math.min(lines.length,25);i++){
-    var cells=splitLine(lines[i]).map(function(h){return h.replace(/^"|"$/g,'').trim();});
-    if(cells.length>2&&cells[0]===''&&cells[1]!==''){hIdx=i;break;}
+    var cells=splitLine(lines[i]).map(function(h){return h.replace(/^"|"$/g,'').trim().toUpperCase();});
+    if(cells[0]===''&&KNOWN.some(function(k){return cells.indexOf(k)>-1;})){hIdx=i;break;}
   }
   var rawH=splitLine(lines[hIdx]).map(function(h){return h.replace(/^"|"$/g,'').trim();});
   var offset=0;while(offset<rawH.length&&rawH[offset]==='')offset++;
