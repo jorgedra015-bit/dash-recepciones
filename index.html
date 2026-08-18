@@ -12,9 +12,9 @@
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;}
-  header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
   .logo{display:flex;align-items:center;gap:10px;}
-  .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .logo-icon{width:30px;height:30px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;}
   .logo-text{font-size:15px;font-weight:700;letter-spacing:-0.3px;}
   .logo-sub{font-size:11px;color:var(--muted);}
   .hright{display:flex;align-items:center;gap:10px;}
@@ -24,37 +24,36 @@
   .dot.y{background:var(--yellow);}
   .dot.r{background:var(--red);}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-family:var(--font);transition:background .15s;}
+  .btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 12px;border-radius:5px;cursor:pointer;font-size:12px;font-family:var(--font);transition:background .15s;}
   .btn:hover{background:var(--border);}
-  .source-bar{background:var(--surface2);border-bottom:1px solid var(--border);padding:8px 24px;display:flex;align-items:center;gap:10px;}
-  .source-bar label{font-size:11px;color:var(--muted);white-space:nowrap;}
-  .source-bar input{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:5px;font-size:12px;font-family:var(--font);}
-  .source-bar input:focus{outline:none;border-color:var(--accent2);}
-  .btn-connect{background:var(--accent);color:#fff;border:none;padding:6px 16px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font);}
-  .btn-connect:hover{opacity:.85;}
-  .kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:16px 24px;}
-  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;}
-  .kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;}
-  .kpi-value{font-size:24px;font-weight:700;letter-spacing:-0.5px;}
-  .kpi-sub{font-size:10px;color:var(--muted);margin-top:3px;}
+  .kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 24px;}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+  .kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;}
+  .kpi-value{font-size:22px;font-weight:700;letter-spacing:-0.5px;}
+  .kpi-sub{font-size:10px;color:var(--muted);margin-top:2px;}
   .ca{color:var(--accent)}.cg{color:var(--green)}.cy{color:var(--yellow)}.cr{color:var(--red)}.cb{color:var(--accent2)}
-  .filters{padding:0 24px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .filters{padding:0 24px 12px;display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
   .fg{display:flex;align-items:center;gap:5px;}
   .fg label{font-size:11px;color:var(--muted);white-space:nowrap;}
-  select,.fi{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:5px 9px;border-radius:5px;font-size:12px;font-family:var(--font);}
+  select,.fi{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:5px;font-size:12px;font-family:var(--font);}
   select:focus,.fi:focus{outline:none;border-color:var(--accent2);}
-  .fi{width:130px;}
+  .fi{width:120px;}
   .fcount{font-size:11px;color:var(--muted);margin-left:auto;}
-  .table-wrap{padding:0 24px;overflow-x:auto;}
+  /* SECTION HEADERS */
+  .section-header{padding:12px 24px 8px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);}
+  .section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+  .section-count{font-size:11px;color:var(--muted);}
+  /* TABLES */
+  .table-wrap{padding:0 24px 4px;overflow-x:auto;}
   table{width:100%;border-collapse:collapse;white-space:nowrap;}
   thead tr{background:var(--surface2);}
-  th{padding:9px 11px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;}
+  th{padding:8px 10px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;}
   th:hover{color:var(--text);}
   th.asc::after{content:' ↑';color:var(--accent2);}
   th.desc::after{content:' ↓';color:var(--accent2);}
-  td{padding:7px 11px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  td{padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
   tr:hover td{background:rgba(255,255,255,.02);}
-  .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.3px;}
+  .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;}
   .b-full{background:#0d3320;color:var(--green);}
   .b-partial{background:#3a2a00;color:var(--yellow);}
   .b-atstore{background:#3a0d0d;color:var(--red);}
@@ -66,21 +65,20 @@
   .b-fuera{background:#3a2a00;color:var(--yellow);}
   .b-enhorario{background:#0d3320;color:var(--green);}
   .b-edit{background:#1a2035;color:var(--accent2);font-size:10px;}
-  .fr{display:flex;align-items:center;gap:7px;min-width:110px;}
+  .fr{display:flex;align-items:center;gap:6px;min-width:100px;}
   .fr-bg{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;}
   .fr-bar{height:100%;border-radius:3px;}
-  .fr-num{font-size:11px;font-weight:600;min-width:38px;text-align:right;}
+  .fr-num{font-size:11px;font-weight:600;min-width:34px;text-align:right;}
   a.flink{color:var(--accent2);text-decoration:none;font-size:11px;}
   a.flink:hover{text-decoration:underline;}
-  .state{text-align:center;padding:60px 24px;color:var(--muted);}
-  .state .ico{font-size:36px;margin-bottom:12px;}
-  .state p{font-size:13px;line-height:1.8;}
-  .spin{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px;}
+  .state{text-align:center;padding:40px 24px;color:var(--muted);}
+  .state .ico{font-size:32px;margin-bottom:10px;}
+  .spin{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px;}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .pager{padding:12px 24px 24px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);}
+  .pager{padding:8px 24px;display:flex;align-items:center;justify-content:space-between;}
   .pinfo{font-size:11px;color:var(--muted);}
   .pbtns{display:flex;gap:4px;}
-  .pbtn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;font-family:var(--font);}
+  .pbtn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:3px 9px;border-radius:4px;cursor:pointer;font-size:12px;font-family:var(--font);}
   .pbtn:hover:not(:disabled){background:var(--border);}
   .pbtn:disabled{opacity:.35;cursor:default;}
   .pbtn.on{background:var(--accent);border-color:var(--accent);color:#fff;}
@@ -97,17 +95,12 @@
     </div>
   </div>
   <div class="hright">
-    <div id="status"><span class="dot y"></span>Sin conectar</div>
-    <button class="btn" onclick="loadData()">↻ Actualizar</button>
+    <div id="status"><span class="dot y"></span>Cargando…</div>
+    <button class="btn" onclick="reloadAll()">↻ Actualizar</button>
   </div>
 </header>
 
-<div class="source-bar">
-  <label>📄 Link CSV:</label>
-  <input type="text" id="csv-input" placeholder="Pega el link CSV del Sheet de Aleph…" />
-  <button class="btn-connect" onclick="loadData()">Conectar</button>
-</div>
-
+<!-- KPIs -->
 <div class="kpi-row">
   <div class="kpi"><div class="kpi-label">Total OC</div><div class="kpi-value ca" id="k-total">—</div><div class="kpi-sub">recepciones</div></div>
   <div class="kpi"><div class="kpi-label">Fillrate Promedio</div><div class="kpi-value cg" id="k-fill">—</div><div class="kpi-sub">% recibido / solicitado</div></div>
@@ -117,6 +110,7 @@
   <div class="kpi"><div class="kpi-label">Con Reedición</div><div class="kpi-value cb" id="k-edit">—</div><div class="kpi-sub">recepciones reeditadas</div></div>
 </div>
 
+<!-- FILTROS -->
 <div class="filters">
   <div class="fg"><label>Desde</label><input type="date" id="f-desde" class="fi" onchange="applyFilters()"></div>
   <div class="fg"><label>Hasta</label><input type="date" id="f-hasta" class="fi" onchange="applyFilters()"></div>
@@ -124,9 +118,8 @@
   <div class="fg"><label>Proveedor</label><select id="f-p" onchange="applyFilters()"><option value="">Todos</option></select></div>
   <div class="fg"><label>Estado OC</label>
     <select id="f-s" onchange="applyFilters()">
-      <option value="">Todos</option>
-      <option>DELIVERED</option><option>PARTIAL_DELIVERY</option><option>AT_STORE</option>
-      <option>CLOSED_FULL_DELIVERY</option><option>CLOSED_PARTIAL_DELIVERY</option>
+      <option value="">Todos</option><option>DELIVERED</option><option>PARTIAL_DELIVERY</option>
+      <option>AT_STORE</option><option>CLOSED_FULL_DELIVERY</option><option>CLOSED_PARTIAL_DELIVERY</option>
     </select>
   </div>
   <div class="fg"><label>Cantidad</label>
@@ -136,81 +129,120 @@
     <select id="f-ft" onchange="applyFilters()"><option value="">Todos</option><option value="> 60 MIN">> 60 MIN</option><option>OK</option></select>
   </div>
   <div class="fg"><label>Horario</label>
-    <select id="f-h" onchange="applyFilters()"><option value="">Todos</option><option value="FUERA">Fuera de horario</option><option value="EN">En horario</option></select>
+    <select id="f-h" onchange="applyFilters()"><option value="">Todos</option><option value="FUERA">Fuera</option><option value="EN">En horario</option></select>
   </div>
   <div class="fg"><label>Reedición</label>
     <select id="f-edit" onchange="applyFilters()"><option value="">Todos</option><option value="SI">Con reedición</option><option value="NO">Sin reedición</option></select>
   </div>
   <div class="fg"><label>Buscar</label><input class="fi" style="width:160px" type="text" id="f-q" placeholder="OC / Tienda / Proveedor…" oninput="applyFilters()"></div>
   <button class="btn" onclick="clearF()">✕ Limpiar</button>
-  <button class="btn" onclick="exportCSV()">↓ CSV</button>
+  <button class="btn" onclick="exportCSV('main')">↓ CSV OC</button>
+  <button class="btn" onclick="exportCSV('detail')">↓ CSV Detalle</button>
   <span class="fcount" id="fcount"></span>
 </div>
 
+<!-- TABLA 1: RECEPCIONES POR OC -->
+<div class="section-header">
+  <span class="section-title">📋 Recepciones por OC</span>
+  <span class="section-count" id="cnt-main"></span>
+</div>
 <div class="table-wrap">
   <table>
     <thead><tr>
-      <th data-col="STATUS_PO">Estado OC</th>
-      <th data-col="FILLRATE_PCT">Fillrate</th>
-      <th data-col="NOMBRE_TIENDA">Tienda</th>
-      <th data-col="ID_TIENDA">ID</th>
-      <th data-col="PROVEEDOR">Proveedor</th>
-      <th data-col="RESPONSABLE_RECEPCION">Responsable</th>
-      <th data-col="NRO_OC">Nro OC</th>
-      <th data-col="INICIO_RECEPCION">Inicio</th>
-      <th data-col="PRIMER_CIERRE">Primer Cierre</th>
-      <th data-col="EDICION_2">Reedición</th>
-      <th data-col="TOTAL_MIN_RECEPCION">Min</th>
-      <th data-col="QTY_SOLICITADA">Qty Sol.</th>
-      <th data-col="QTY_RECIBIDA">Qty Rec.</th>
-      <th data-col="FUERA_DE_HORARIO">Horario</th>
-      <th data-col="FLAG_CANTIDAD">Flag Cant.</th>
-      <th data-col="FLAG_TIEMPO">Flag T.</th>
-      <th data-col="NUMERO_FACTURA">Nro Factura</th>
+      <th data-col="STATUS_PO" data-tbl="main">Estado OC</th>
+      <th data-col="FILLRATE_PCT" data-tbl="main">Fillrate</th>
+      <th data-col="NOMBRE_TIENDA" data-tbl="main">Tienda</th>
+      <th data-col="ID_TIENDA" data-tbl="main">ID</th>
+      <th data-col="PROVEEDOR" data-tbl="main">Proveedor</th>
+      <th data-col="RESPONSABLE_RECEPCION" data-tbl="main">Responsable</th>
+      <th data-col="NRO_OC" data-tbl="main">Nro OC</th>
+      <th data-col="INICIO_RECEPCION" data-tbl="main">Inicio</th>
+      <th data-col="PRIMER_CIERRE" data-tbl="main">Primer Cierre</th>
+      <th data-col="EDICION_2" data-tbl="main">Reedición</th>
+      <th data-col="TOTAL_MIN_RECEPCION" data-tbl="main">Min</th>
+      <th data-col="QTY_SOLICITADA" data-tbl="main">Qty Sol.</th>
+      <th data-col="QTY_RECIBIDA" data-tbl="main">Qty Rec.</th>
+      <th data-col="FUERA_DE_HORARIO" data-tbl="main">Horario</th>
+      <th data-col="FLAG_CANTIDAD" data-tbl="main">Flag Cant.</th>
+      <th data-col="FLAG_TIEMPO" data-tbl="main">Flag T.</th>
+      <th data-col="NUMERO_FACTURA" data-tbl="main">Factura Nro</th>
       <th>Factura</th>
     </tr></thead>
-    <tbody id="tbody">
-      <tr><td colspan="18"><div class="state"><div class="ico">📋</div><p>Pega el link CSV del Sheet de Aleph y haz clic en <strong>Conectar</strong></p></div></td></tr>
+    <tbody id="tbody-main">
+      <tr><td colspan="18"><div class="state"><div class="spin"></div><p>Cargando…</p></div></td></tr>
     </tbody>
   </table>
 </div>
-<div class="pager"><span class="pinfo" id="pinfo"></span><div class="pbtns" id="pbtns"></div></div>
+<div class="pager"><span class="pinfo" id="pinfo-main"></span><div class="pbtns" id="pbtns-main"></div></div>
+
+<!-- TABLA 2: DETALLE POR PRODUCTO -->
+<div class="section-header" style="margin-top:16px">
+  <span class="section-title">🔍 Detalle por Producto</span>
+  <span class="section-count" id="cnt-detail"></span>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr>
+      <th data-col="FILLRATE_PCT" data-tbl="detail">Fillrate</th>
+      <th data-col="NOMBRE_TIENDA" data-tbl="detail">Tienda</th>
+      <th data-col="PROVEEDOR" data-tbl="detail">Proveedor</th>
+      <th data-col="NRO_OC" data-tbl="detail">Nro OC</th>
+      <th data-col="PRODUCTO" data-tbl="detail">Producto</th>
+      <th data-col="EAN" data-tbl="detail">EAN</th>
+      <th data-col="QTY_SOLICITADA" data-tbl="detail">Qty Sol.</th>
+      <th data-col="QTY_RECIBIDA" data-tbl="detail">Qty Rec.</th>
+    </tr></thead>
+    <tbody id="tbody-detail">
+      <tr><td colspan="8"><div class="state"><div class="spin"></div><p>Cargando…</p></div></td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="pager" style="margin-bottom:24px"><span class="pinfo" id="pinfo-detail"></span><div class="pbtns" id="pbtns-detail"></div></div>
 
 <script>
-var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=540661722&single=true&output=csv';
-document.getElementById('csv-input').value = CSV_URL;
+var CSV_MAIN   = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=540661722&single=true&output=csv';
+var CSV_DETAIL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjPuCOFPnSUnV5iWf3qAZr5NHOdgg4MnsKWi9Ah8EXMzPXMErhNuO6117rAme_-GEnpyKFs8k0U3Yh/pub?gid=771599306&single=true&output=csv';
 
 var PAGE = 100;
-var all = [], fil = [], pg = 1, sCol = 'INICIO_RECEPCION', sDir = -1;
+var allMain=[], allDetail=[];
+var filMain=[], filDetail=[];
+var pgMain=1, pgDetail=1;
+var sColMain='INICIO_RECEPCION', sDirMain=-1;
+var sColDetail='NRO_OC', sDirDetail=-1;
 
+// Sort headers
 document.querySelectorAll('th[data-col]').forEach(function(th) {
-  th.addEventListener('click', function() { sortBy(th.dataset.col); });
+  th.addEventListener('click', function() {
+    if (th.dataset.tbl === 'main') sortBy('main', th.dataset.col);
+    else sortBy('detail', th.dataset.col);
+  });
 });
 
-function loadData() {
-  var inputEl = document.getElementById('csv-input');
-  if (inputEl && inputEl.value.trim()) CSV_URL = inputEl.value.trim();
-  setStatus('y', 'Cargando…');
-  document.getElementById('tbody').innerHTML = '<tr><td colspan="18"><div class="state"><div class="spin"></div><p>Leyendo datos…</p></div></td></tr>';
-  fetch(CSV_URL, { cache: 'no-store', mode: 'cors' })
-    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
-    .then(function(text) {
-      if (!text || text.trim().startsWith('<')) throw new Error('No se recibió CSV válido');
-      all = parseCSV(text);
-      if (!all.length) throw new Error('Sin datos');
-      buildFilters();
-      applyFilters();
-      var t = new Date().toLocaleString('es-CL',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
-      setStatus('g', 'Actualizado ' + t + ' · ' + all.length.toLocaleString('es-CL') + ' filas');
-    })
-    .catch(function(e) {
-      setStatus('r', 'Error: ' + e.message);
-      document.getElementById('tbody').innerHTML = '<tr><td colspan="18"><div class="state"><div class="ico">⚠️</div><p>' + e.message + '</p></div></td></tr>';
+function reloadAll() {
+  setStatus('y','Cargando…');
+  var p1 = loadCSV(CSV_MAIN).then(function(data){ allMain = data; });
+  var p2 = loadCSV(CSV_DETAIL).then(function(data){ allDetail = data; });
+  Promise.all([p1,p2]).then(function(){
+    buildFilters();
+    applyFilters();
+    var t = new Date().toLocaleString('es-CL',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+    setStatus('g','Actualizado ' + t);
+  }).catch(function(e){
+    setStatus('r','Error: ' + e.message);
+  });
+}
+
+function loadCSV(url) {
+  return fetch(url, {cache:'no-store', mode:'cors'})
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); })
+    .then(function(text){
+      if (!text || text.trim().startsWith('<')) throw new Error('CSV inválido');
+      return parseCSV(text);
     });
 }
 
 function setStatus(c, msg) {
-  document.getElementById('status').innerHTML = '<span class="dot ' + c + '"></span>' + msg;
+  document.getElementById('status').innerHTML = '<span class="dot '+c+'"></span>'+msg;
 }
 
 function parseCSV(text) {
@@ -221,176 +253,228 @@ function parseCSV(text) {
       var ch=line[i]; if(ch==='"'){inQ=!inQ;} else if(ch===','&&!inQ){r.push(c);c='';} else c+=ch;
     } r.push(c); return r;
   }
-  var hIdx = 0;
-  for (var i = 0; i < Math.min(lines.length, 25); i++) {
-    var cells = splitLine(lines[i]).map(function(h){ return h.replace(/^"|"$/g,'').trim(); });
-    if (cells.length > 2 && cells[0] === '' && cells[1].toUpperCase() === 'NOMBRE_TIENDA') { hIdx = i; break; }
+  var hIdx=0;
+  for (var i=0; i<Math.min(lines.length,25); i++) {
+    var cells=splitLine(lines[i]).map(function(h){return h.replace(/^"|"$/g,'').trim();});
+    if (cells.length>2 && cells[0]==='' && (cells[1].toUpperCase()==='NOMBRE_TIENDA'||cells[1].toUpperCase()==='FILLRATE_PCT')) { hIdx=i; break; }
   }
-  var rawH = splitLine(lines[hIdx]).map(function(h){ return h.replace(/^"|"$/g,'').trim(); });
-  var offset = 0;
-  while (offset < rawH.length && rawH[offset] === '') offset++;
-  var headers = rawH.slice(offset);
-  var rows = [];
-  for (var j = hIdx + 1; j < lines.length; j++) {
-    var vals = splitLine(lines[j]).map(function(v){ return v.replace(/^"|"$/g,'').trim(); }).slice(offset);
-    if (vals.every(function(v){ return !v; })) continue;
-    var obj = {}; headers.forEach(function(h, k){ obj[h] = vals[k] || ''; });
-    if (obj['NOMBRE_TIENDA'] || obj['NRO_OC']) rows.push(obj);
+  var rawH=splitLine(lines[hIdx]).map(function(h){return h.replace(/^"|"$/g,'').trim();});
+  var offset=0; while(offset<rawH.length&&rawH[offset]==='') offset++;
+  var headers=rawH.slice(offset);
+  var rows=[];
+  for (var j=hIdx+1; j<lines.length; j++) {
+    var vals=splitLine(lines[j]).map(function(v){return v.replace(/^"|"$/g,'').trim();}).slice(offset);
+    if (vals.every(function(v){return !v;})) continue;
+    var obj={}; headers.forEach(function(h,k){obj[h]=vals[k]||'';});
+    if (obj['NOMBRE_TIENDA']||obj['NRO_OC']||obj['PRODUCTO']) rows.push(obj);
   }
   return rows;
 }
 
 function buildFilters() {
-  // Auto-setear fechas últimos 29 días
-  var desdeEl = document.getElementById('f-desde');
-  var hastaEl = document.getElementById('f-hasta');
-  if (!desdeEl.value) {
-    var d = new Date(); d.setDate(d.getDate() - 29);
-    desdeEl.value = d.toISOString().slice(0,10);
-  }
-  if (!hastaEl.value) {
-    hastaEl.value = new Date().toISOString().slice(0,10);
-  }
-  function uniq(k) { return [...new Set(all.map(function(r){ return r[k]; }).filter(Boolean))].sort(); }
-  function opt(arr) { return arr.map(function(v){ return '<option value="' + v + '">' + v + '</option>'; }).join(''); }
-  document.getElementById('f-t').innerHTML = '<option value="">Todas</option>' + opt(uniq('NOMBRE_TIENDA'));
-  document.getElementById('f-p').innerHTML = '<option value="">Todos</option>' + opt(uniq('PROVEEDOR'));
+  var desdeEl=document.getElementById('f-desde');
+  var hastaEl=document.getElementById('f-hasta');
+  if (!desdeEl.value) { var d=new Date(); d.setDate(d.getDate()-29); desdeEl.value=d.toISOString().slice(0,10); }
+  if (!hastaEl.value) { hastaEl.value=new Date().toISOString().slice(0,10); }
+  function uniq(arr,k){return [...new Set(arr.map(function(r){return r[k];}).filter(Boolean))].sort();}
+  function opt(arr){return arr.map(function(v){return '<option value="'+v+'">'+v+'</option>';}).join('');}
+  // Combinar tiendas y proveedores de ambas tablas
+  var tiendas = [...new Set([...uniq(allMain,'NOMBRE_TIENDA'),...uniq(allDetail,'NOMBRE_TIENDA')])].sort();
+  var provs   = [...new Set([...uniq(allMain,'PROVEEDOR'),...uniq(allDetail,'PROVEEDOR')])].sort();
+  document.getElementById('f-t').innerHTML='<option value="">Todas</option>'+opt(tiendas);
+  document.getElementById('f-p').innerHTML='<option value="">Todos</option>'+opt(provs);
 }
 
 function applyFilters() {
-  var desde = document.getElementById('f-desde').value;
-  var hasta = document.getElementById('f-hasta').value;
-  var t = document.getElementById('f-t').value;
-  var p = document.getElementById('f-p').value;
-  var s = document.getElementById('f-s').value;
-  var fc = document.getElementById('f-fc').value;
-  var ft = document.getElementById('f-ft').value;
-  var h = document.getElementById('f-h').value;
-  var edit = document.getElementById('f-edit').value;
-  var q = document.getElementById('f-q').value.toLowerCase();
+  var desde=document.getElementById('f-desde').value;
+  var hasta=document.getElementById('f-hasta').value;
+  var t=document.getElementById('f-t').value;
+  var p=document.getElementById('f-p').value;
+  var s=document.getElementById('f-s').value;
+  var fc=document.getElementById('f-fc').value;
+  var ft=document.getElementById('f-ft').value;
+  var h=document.getElementById('f-h').value;
+  var edit=document.getElementById('f-edit').value;
+  var q=document.getElementById('f-q').value.toLowerCase();
 
-  fil = all.filter(function(r) {
-    var fecha = (r.INICIO_RECEPCION || r.PRIMER_CIERRE || '').slice(0,10);
-    if (desde && fecha < desde) return false;
-    if (hasta && fecha > hasta) return false;
-    if (t && r.NOMBRE_TIENDA !== t) return false;
-    if (p && r.PROVEEDOR !== p) return false;
-    if (s && r.STATUS_PO !== s) return false;
-    if (fc && r.FLAG_CANTIDAD !== fc) return false;
-    if (ft && r.FLAG_TIEMPO !== ft) return false;
-    if (h === 'FUERA' && String(r.FUERA_DE_HORARIO).indexOf('FUERA') === -1) return false;
-    if (h === 'EN' && String(r.FUERA_DE_HORARIO).indexOf('EN HORARIO') === -1) return false;
-    if (edit === 'SI' && !r.EDICION_2) return false;
-    if (edit === 'NO' && r.EDICION_2) return false;
-    if (q && [r.NRO_OC, r.RESPONSABLE_RECEPCION, r.PROVEEDOR, r.NOMBRE_TIENDA].every(function(v){ return String(v).toLowerCase().indexOf(q) === -1; })) return false;
+  // Filtrar tabla principal
+  filMain=allMain.filter(function(r){
+    var fecha=(r.INICIO_RECEPCION||r.PRIMER_CIERRE||'').slice(0,10);
+    if(desde&&fecha<desde) return false;
+    if(hasta&&fecha>hasta) return false;
+    if(t&&r.NOMBRE_TIENDA!==t) return false;
+    if(p&&r.PROVEEDOR!==p) return false;
+    if(s&&r.STATUS_PO!==s) return false;
+    if(fc&&r.FLAG_CANTIDAD!==fc) return false;
+    if(ft&&r.FLAG_TIEMPO!==ft) return false;
+    if(h==='FUERA'&&String(r.FUERA_DE_HORARIO).indexOf('FUERA')===-1) return false;
+    if(h==='EN'&&String(r.FUERA_DE_HORARIO).indexOf('EN HORARIO')===-1) return false;
+    if(edit==='SI'&&(!r.EDICION_2||!r.EDICION_2.trim())) return false;
+    if(edit==='NO'&&r.EDICION_2&&r.EDICION_2.trim()) return false;
+    if(q&&[r.NRO_OC,r.RESPONSABLE_RECEPCION,r.PROVEEDOR,r.NOMBRE_TIENDA].every(function(v){return String(v).toLowerCase().indexOf(q)===-1;})) return false;
     return true;
   });
 
-  fil.sort(function(a, b) {
-    var va = a[sCol] || '', vb = b[sCol] || '';
-    var na = parseFloat(va), nb = parseFloat(vb);
-    if (!isNaN(na) && !isNaN(nb)) return sDir * (na - nb);
-    return sDir * String(va).localeCompare(String(vb));
+  // Obtener OCs filtradas para sincronizar detalle
+  var ocsFiltered = new Set(filMain.map(function(r){return r.NRO_OC;}));
+
+  // Filtrar detalle usando los mismos filtros de tienda/proveedor/OC
+  filDetail=allDetail.filter(function(r){
+    // Si hay OCs filtradas en tabla principal, el detalle debe coincidir
+    if(ocsFiltered.size>0 && !ocsFiltered.has(r.NRO_OC)) return false;
+    if(t&&r.NOMBRE_TIENDA!==t) return false;
+    if(p&&r.PROVEEDOR!==p) return false;
+    if(q&&[r.NRO_OC,r.PROVEEDOR,r.NOMBRE_TIENDA,r.PRODUCTO,r.EAN].every(function(v){return String(v).toLowerCase().indexOf(q)===-1;})) return false;
+    return true;
   });
 
-  updateKPIs(); pg = 1; render();
-  document.getElementById('fcount').textContent = fil.length.toLocaleString('es-CL') + ' de ' + all.length.toLocaleString('es-CL') + ' registros';
+  // Sort
+  filMain.sort(function(a,b){
+    var va=a[sColMain]||'',vb=b[sColMain]||'';
+    var na=parseFloat(va),nb=parseFloat(vb);
+    if(!isNaN(na)&&!isNaN(nb)) return sDirMain*(na-nb);
+    return sDirMain*String(va).localeCompare(String(vb));
+  });
+  filDetail.sort(function(a,b){
+    var va=a[sColDetail]||'',vb=b[sColDetail]||'';
+    var na=parseFloat(va),nb=parseFloat(vb);
+    if(!isNaN(na)&&!isNaN(nb)) return sDirDetail*(na-nb);
+    return sDirDetail*String(va).localeCompare(String(vb));
+  });
+
+  updateKPIs();
+  pgMain=1; pgDetail=1;
+  renderMain(); renderDetail();
+  document.getElementById('fcount').textContent = filMain.length.toLocaleString('es-CL')+' OC · '+filDetail.length.toLocaleString('es-CL')+' productos';
 }
 
 function updateKPIs() {
-  var fills = fil.map(function(r){ return parseFloat(r.FILLRATE_PCT); }).filter(function(n){ return !isNaN(n); });
-  document.getElementById('k-total').textContent = fil.length.toLocaleString('es-CL');
-  document.getElementById('k-fill').textContent = fills.length ? (fills.reduce(function(a,b){return a+b;},0)/fills.length).toFixed(1) + '%' : '—';
-  document.getElementById('k-falt').textContent = fil.filter(function(r){ return r.FLAG_CANTIDAD === 'FALTANTE'; }).length;
-  document.getElementById('k-fuera').textContent = fil.filter(function(r){ return String(r.FUERA_DE_HORARIO).indexOf('FUERA') > -1; }).length;
-  document.getElementById('k-lento').textContent = fil.filter(function(r){ return r.FLAG_TIEMPO === '> 60 MIN'; }).length;
-  document.getElementById('k-edit').textContent = fil.filter(function(r){ return r.EDICION_2 && r.EDICION_2.trim() !== ''; }).length;
+  var fills=filMain.map(function(r){return parseFloat(r.FILLRATE_PCT);}).filter(function(n){return !isNaN(n);});
+  document.getElementById('k-total').textContent=filMain.length.toLocaleString('es-CL');
+  document.getElementById('k-fill').textContent=fills.length?(fills.reduce(function(a,b){return a+b;},0)/fills.length).toFixed(1)+'%':'—';
+  document.getElementById('k-falt').textContent=filMain.filter(function(r){return r.FLAG_CANTIDAD==='FALTANTE';}).length;
+  document.getElementById('k-fuera').textContent=filMain.filter(function(r){return String(r.FUERA_DE_HORARIO).indexOf('FUERA')>-1;}).length;
+  document.getElementById('k-lento').textContent=filMain.filter(function(r){return r.FLAG_TIEMPO==='> 60 MIN';}).length;
+  document.getElementById('k-edit').textContent=filMain.filter(function(r){return r.EDICION_2&&r.EDICION_2.trim();}).length;
 }
 
-function render() {
-  var start = (pg-1)*PAGE, slice = fil.slice(start, start+PAGE);
-  var tbody = document.getElementById('tbody');
-  if (!slice.length) {
-    tbody.innerHTML = '<tr><td colspan="18"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>';
-    renderPager(); return;
-  }
-  tbody.innerHTML = slice.map(function(r) {
-    var fill = parseFloat(r.FILLRATE_PCT);
-    var fc = fill >= 100 ? 'var(--green)' : fill >= 85 ? 'var(--yellow)' : 'var(--red)';
-    var frHtml = !isNaN(fill) ? '<div class="fr"><div class="fr-bg"><div class="fr-bar" style="width:' + Math.min(fill,100) + '%;background:' + fc + '"></div></div><span class="fr-num" style="color:' + fc + '">' + fill + '%</span></div>' : '—';
-    var s = (r.STATUS_PO || '').toUpperCase();
-    var sBadge = s.indexOf('CLOSED_FULL') > -1 || s === 'DELIVERED' ? '<span class="badge b-full">' + r.STATUS_PO + '</span>' : s.indexOf('PARTIAL') > -1 ? '<span class="badge b-partial">' + r.STATUS_PO + '</span>' : s === 'AT_STORE' ? '<span class="badge b-atstore">' + r.STATUS_PO + '</span>' : '<span class="badge b-other">' + (r.STATUS_PO||'—') + '</span>';
-    var cBadge = r.FLAG_CANTIDAD === 'FALTANTE' ? '<span class="badge b-falt">FALTANTE</span>' : r.FLAG_CANTIDAD === 'SOBRANTE' ? '<span class="badge b-sobr">SOBRANTE</span>' : r.FLAG_CANTIDAD === 'OK' ? '<span class="badge b-ok">OK</span>' : '—';
-    var tBadge = r.FLAG_TIEMPO === '> 60 MIN' ? '<span class="badge b-60">> 60 MIN</span>' : r.FLAG_TIEMPO === 'OK' ? '<span class="badge b-ok">OK</span>' : '—';
-    var hBadge = String(r.FUERA_DE_HORARIO).indexOf('FUERA') > -1 ? '<span class="badge b-fuera">' + r.FUERA_DE_HORARIO + '</span>' : '<span class="badge b-enhorario">✔ EN HORARIO</span>';
-    var editCell = r.EDICION_2 && r.EDICION_2.trim() ? '<span class="badge b-edit">✏ ' + r.EDICION_2 + '</span>' : '—';
-    var fLink = r.FACTURA_URL ? '<a class="flink" href="' + r.FACTURA_URL + '" target="_blank">📄 Ver</a>' : '—';
-    return '<tr>' +
-      '<td>' + sBadge + '</td>' +
-      '<td>' + frHtml + '</td>' +
-      '<td title="' + r.NOMBRE_TIENDA + '" style="max-width:160px;overflow:hidden;text-overflow:ellipsis">' + (r.NOMBRE_TIENDA||'—') + '</td>' +
-      '<td style="color:var(--muted);font-size:11px">' + (r.ID_TIENDA||'—') + '</td>' +
-      '<td title="' + r.PROVEEDOR + '" style="max-width:130px;overflow:hidden;text-overflow:ellipsis">' + (r.PROVEEDOR||'—') + '</td>' +
-      '<td>' + (r.RESPONSABLE_RECEPCION||'—') + '</td>' +
-      '<td style="font-family:monospace;font-size:12px">' + (r.NRO_OC||'—') + '</td>' +
-      '<td style="color:var(--muted);font-size:12px">' + (r.INICIO_RECEPCION||'—') + '</td>' +
-      '<td style="color:var(--green);font-size:12px;font-weight:600">' + (r.PRIMER_CIERRE||'—') + '</td>' +
-      '<td>' + editCell + '</td>' +
-      '<td style="text-align:right">' + (r.TOTAL_MIN_RECEPCION||'—') + '</td>' +
-      '<td style="text-align:right">' + (r.QTY_SOLICITADA||'—') + '</td>' +
-      '<td style="text-align:right">' + (r.QTY_RECIBIDA||'—') + '</td>' +
-      '<td>' + hBadge + '</td>' +
-      '<td>' + cBadge + '</td>' +
-      '<td>' + tBadge + '</td>' +
-      '<td style="font-family:monospace;font-size:11px">' + (r.NUMERO_FACTURA||'—') + '</td>' +
-      '<td>' + fLink + '</td>' +
+function renderMain() {
+  var start=(pgMain-1)*PAGE, slice=filMain.slice(start,start+PAGE);
+  var tbody=document.getElementById('tbody-main');
+  document.getElementById('cnt-main').textContent=filMain.length.toLocaleString('es-CL')+' recepciones';
+  if(!slice.length){tbody.innerHTML='<tr><td colspan="18"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>';renderPager('main');return;}
+  tbody.innerHTML=slice.map(function(r){
+    var fill=parseFloat(r.FILLRATE_PCT);
+    var fc=fill>=100?'var(--green)':fill>=85?'var(--yellow)':'var(--red)';
+    var frHtml=!isNaN(fill)?'<div class="fr"><div class="fr-bg"><div class="fr-bar" style="width:'+Math.min(fill,100)+'%;background:'+fc+'"></div></div><span class="fr-num" style="color:'+fc+'">'+fill+'%</span></div>':'—';
+    var sv=(r.STATUS_PO||'').toUpperCase();
+    var sBadge=sv.indexOf('CLOSED_FULL')>-1||sv==='DELIVERED'?'<span class="badge b-full">'+r.STATUS_PO+'</span>':sv.indexOf('PARTIAL')>-1?'<span class="badge b-partial">'+r.STATUS_PO+'</span>':sv==='AT_STORE'?'<span class="badge b-atstore">'+r.STATUS_PO+'</span>':'<span class="badge b-other">'+(r.STATUS_PO||'—')+'</span>';
+    var cBadge=r.FLAG_CANTIDAD==='FALTANTE'?'<span class="badge b-falt">FALTANTE</span>':r.FLAG_CANTIDAD==='SOBRANTE'?'<span class="badge b-sobr">SOBRANTE</span>':r.FLAG_CANTIDAD==='OK'?'<span class="badge b-ok">OK</span>':'—';
+    var tBadge=r.FLAG_TIEMPO==='> 60 MIN'?'<span class="badge b-60">> 60 MIN</span>':r.FLAG_TIEMPO==='OK'?'<span class="badge b-ok">OK</span>':'—';
+    var hBadge=String(r.FUERA_DE_HORARIO).indexOf('FUERA')>-1?'<span class="badge b-fuera">'+r.FUERA_DE_HORARIO+'</span>':'<span class="badge b-enhorario">✔ EN HORARIO</span>';
+    var editCell=r.EDICION_2&&r.EDICION_2.trim()?'<span class="badge b-edit">✏ '+r.EDICION_2+'</span>':'—';
+    var fLink=r.FACTURA_URL?'<a class="flink" href="'+r.FACTURA_URL+'" target="_blank">📄 Ver</a>':'—';
+    return '<tr>'+
+      '<td>'+sBadge+'</td>'+
+      '<td>'+frHtml+'</td>'+
+      '<td style="max-width:150px;overflow:hidden;text-overflow:ellipsis" title="'+r.NOMBRE_TIENDA+'">'+(r.NOMBRE_TIENDA||'—')+'</td>'+
+      '<td style="color:var(--muted);font-size:11px">'+(r.ID_TIENDA||'—')+'</td>'+
+      '<td style="max-width:130px;overflow:hidden;text-overflow:ellipsis">'+(r.PROVEEDOR||'—')+'</td>'+
+      '<td>'+(r.RESPONSABLE_RECEPCION||'—')+'</td>'+
+      '<td style="font-family:monospace;font-size:12px">'+(r.NRO_OC||'—')+'</td>'+
+      '<td style="color:var(--muted);font-size:12px">'+(r.INICIO_RECEPCION||'—')+'</td>'+
+      '<td style="color:var(--green);font-size:12px;font-weight:600">'+(r.PRIMER_CIERRE||'—')+'</td>'+
+      '<td>'+editCell+'</td>'+
+      '<td style="text-align:right">'+(r.TOTAL_MIN_RECEPCION||'—')+'</td>'+
+      '<td style="text-align:right">'+(r.QTY_SOLICITADA||'—')+'</td>'+
+      '<td style="text-align:right">'+(r.QTY_RECIBIDA||'—')+'</td>'+
+      '<td>'+hBadge+'</td>'+
+      '<td>'+cBadge+'</td>'+
+      '<td>'+tBadge+'</td>'+
+      '<td style="font-family:monospace;font-size:11px">'+(r.NUMERO_FACTURA||'—')+'</td>'+
+      '<td>'+fLink+'</td>'+
     '</tr>';
   }).join('');
-  renderPager();
+  renderPager('main');
 }
 
-function renderPager() {
-  var pages = Math.ceil(fil.length/PAGE);
-  var s = (pg-1)*PAGE+1, e = Math.min(pg*PAGE, fil.length);
-  document.getElementById('pinfo').textContent = fil.length ? 'Mostrando ' + s + '–' + e + ' de ' + fil.length.toLocaleString('es-CL') : '';
-  var c = document.getElementById('pbtns');
-  if (pages <= 1) { c.innerHTML = ''; return; }
-  var h = '<button class="pbtn" onclick="goP(' + (pg-1) + ')" ' + (pg===1?'disabled':'') + '>‹</button>';
-  for (var i = 1; i <= pages; i++) {
-    if (i===1||i===pages||Math.abs(i-pg)<=2) h += '<button class="pbtn ' + (i===pg?'on':'') + '" onclick="goP(' + i + ')">' + i + '</button>';
-    else if (Math.abs(i-pg)===3) h += '<span style="color:var(--muted);padding:4px 5px">…</span>';
+function renderDetail() {
+  var start=(pgDetail-1)*PAGE, slice=filDetail.slice(start,start+PAGE);
+  var tbody=document.getElementById('tbody-detail');
+  document.getElementById('cnt-detail').textContent=filDetail.length.toLocaleString('es-CL')+' productos';
+  if(!slice.length){tbody.innerHTML='<tr><td colspan="8"><div class="state"><div class="ico">🔍</div><p>Sin resultados</p></div></td></tr>';renderPager('detail');return;}
+  tbody.innerHTML=slice.map(function(r){
+    var fill=parseFloat(r.FILLRATE_PCT);
+    var fc=fill>=100?'var(--green)':fill>=85?'var(--yellow)':'var(--red)';
+    var frHtml=!isNaN(fill)?'<div class="fr"><div class="fr-bg"><div class="fr-bar" style="width:'+Math.min(fill,100)+'%;background:'+fc+'"></div></div><span class="fr-num" style="color:'+fc+'">'+fill+'%</span></div>':'—';
+    return '<tr>'+
+      '<td>'+frHtml+'</td>'+
+      '<td style="max-width:150px;overflow:hidden;text-overflow:ellipsis">'+(r.NOMBRE_TIENDA||'—')+'</td>'+
+      '<td style="max-width:120px;overflow:hidden;text-overflow:ellipsis">'+(r.PROVEEDOR||'—')+'</td>'+
+      '<td style="font-family:monospace;font-size:12px">'+(r.NRO_OC||'—')+'</td>'+
+      '<td style="max-width:250px;overflow:hidden;text-overflow:ellipsis" title="'+(r.PRODUCTO||'')+'">'+(r.PRODUCTO||'—')+'</td>'+
+      '<td style="font-family:monospace;font-size:11px">'+(r.EAN||'—')+'</td>'+
+      '<td style="text-align:right">'+(r.QTY_SOLICITADA||'—')+'</td>'+
+      '<td style="text-align:right">'+(r.QTY_RECIBIDA||'—')+'</td>'+
+    '</tr>';
+  }).join('');
+  renderPager('detail');
+}
+
+function renderPager(tbl) {
+  var fil=tbl==='main'?filMain:filDetail;
+  var pg=tbl==='main'?pgMain:pgDetail;
+  var pages=Math.ceil(fil.length/PAGE);
+  var s=(pg-1)*PAGE+1, e=Math.min(pg*PAGE,fil.length);
+  document.getElementById('pinfo-'+tbl).textContent=fil.length?'Mostrando '+s+'–'+e+' de '+fil.length.toLocaleString('es-CL'):'';
+  var c=document.getElementById('pbtns-'+tbl);
+  if(pages<=1){c.innerHTML='';return;}
+  var h='<button class="pbtn" onclick="goP(\''+tbl+'\','+(pg-1)+')" '+(pg===1?'disabled':'')+'>‹</button>';
+  for(var i=1;i<=pages;i++){
+    if(i===1||i===pages||Math.abs(i-pg)<=2) h+='<button class="pbtn '+(i===pg?'on':'')+'" onclick="goP(\''+tbl+'\','+i+')">'+i+'</button>';
+    else if(Math.abs(i-pg)===3) h+='<span style="color:var(--muted);padding:3px 4px">…</span>';
   }
-  h += '<button class="pbtn" onclick="goP(' + (pg+1) + ')" ' + (pg===pages?'disabled':'') + '>›</button>';
-  c.innerHTML = h;
+  h+='<button class="pbtn" onclick="goP(\''+tbl+'\','+(pg+1)+')" '+(pg===pages?'disabled':'')+'>›</button>';
+  c.innerHTML=h;
 }
 
-function goP(p) { var pages=Math.ceil(fil.length/PAGE); if(p<1||p>pages)return; pg=p; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+function goP(tbl,p){
+  var fil=tbl==='main'?filMain:filDetail;
+  var pages=Math.ceil(fil.length/PAGE);
+  if(p<1||p>pages) return;
+  if(tbl==='main') pgMain=p; else pgDetail=p;
+  if(tbl==='main') renderMain(); else renderDetail();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
-function sortBy(col) {
-  if (sCol===col) sDir*=-1; else { sCol=col; sDir=-1; }
-  document.querySelectorAll('th').forEach(function(th){
-    th.classList.remove('asc','desc');
-    if (th.dataset.col===col) th.classList.add(sDir===1?'asc':'desc');
-  });
+function sortBy(tbl,col){
+  if(tbl==='main'){
+    if(sColMain===col) sDirMain*=-1; else{sColMain=col;sDirMain=-1;}
+    document.querySelectorAll('th[data-tbl="main"]').forEach(function(th){th.classList.remove('asc','desc');if(th.dataset.col===col)th.classList.add(sDirMain===1?'asc':'desc');});
+  } else {
+    if(sColDetail===col) sDirDetail*=-1; else{sColDetail=col;sDirDetail=-1;}
+    document.querySelectorAll('th[data-tbl="detail"]').forEach(function(th){th.classList.remove('asc','desc');if(th.dataset.col===col)th.classList.add(sDirDetail===1?'asc':'desc');});
+  }
   applyFilters();
 }
 
-function clearF() {
-  ['f-desde','f-hasta','f-t','f-p','f-s','f-fc','f-ft','f-h','f-edit'].forEach(function(id){ document.getElementById(id).value=''; });
+function clearF(){
+  ['f-desde','f-hasta','f-t','f-p','f-s','f-fc','f-ft','f-h','f-edit'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('f-q').value=''; applyFilters();
 }
 
-function exportCSV() {
-  if (!fil.length) return;
-  var keys = Object.keys(fil[0]);
-  var rows = [keys.join(',')].concat(fil.map(function(r){ return keys.map(function(k){ return '"' + (r[k]||'').replace(/"/g,'""') + '"'; }).join(','); }));
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'}));
-  a.download = 'recepciones_' + new Date().toISOString().slice(0,10) + '.csv'; a.click();
+function exportCSV(tbl){
+  var data=tbl==='main'?filMain:filDetail;
+  if(!data.length) return;
+  var keys=Object.keys(data[0]);
+  var rows=[keys.join(',')].concat(data.map(function(r){return keys.map(function(k){return '"'+(r[k]||'').replace(/"/g,'""')+'"';}).join(',');}));
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'}));
+  a.download='recepciones_'+(tbl==='main'?'oc':'detalle')+'_'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
 }
 
-// Cargar automáticamente al abrir el dash
-loadData();
+// Auto-cargar al abrir
+reloadAll();
 </script>
 </body>
 </html>
